@@ -12,14 +12,26 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_recipe"
-        android:name="ddwucom.mobile.recipebook.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_timer"
+        android:name="ddwucom.mobile.recipebook.ui.timer.TimerFragment"
+        android:label="@string/title_timer"
+        tools:layout="@layout/fragment_timer" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="ddwucom.mobile.recipebook.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_recipe"
+        android:name="ddwucom.mobile.recipebook.ui.recipe.RecipeFragment"
+        android:label="@string/title_recipe"
+        tools:layout="@layout/fragment_recipe" />
+
+    <fragment
+        android:id="@+id/navigation_map"
+        android:name="ddwucom.mobile.recipebook.ui.map.MapFragment"
+        android:label="@string/title_map"
+        tools:layout="@layout/fragment_map" />
+
+    <fragment
+        android:id="@+id/navigation_my_page"
+        android:name="ddwucom.mobile.recipebook.ui.myPage.MyPageFragment"
+        android:label="@string/title_myPage"
+        tools:layout="@layout/fragment_my_page" />
 </navigation>

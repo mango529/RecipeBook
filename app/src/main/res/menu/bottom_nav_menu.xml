@@ -20,7 +20,7 @@
         android:title="@string/title_recipe" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_my_page"
         android:icon="@drawable/ic_baseline_person_24"
         android:title="@string/title_myPage" />
 
