@@ -40,19 +40,29 @@ public class MainActivity extends AppCompatActivity {
             switch(item.getItemId())
             {
                 case R.id.navigation_home:
-                    transaction.replace(R.id.frameLayout, fragmentHome).commitAllowingStateLoss();
+                    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                                            .replace(R.id.frameLayout, fragmentHome)
+                                            .commitAllowingStateLoss();
                     break;
                 case R.id.navigation_recipe:
-                    transaction.replace(R.id.frameLayout, fragmentRecipe).commitAllowingStateLoss();
+                    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                                            .replace(R.id.frameLayout, fragmentRecipe)
+                                            .commitAllowingStateLoss();
                     break;
                 case R.id.navigation_map:
-                    transaction.replace(R.id.frameLayout, fragmentMap).commitAllowingStateLoss();
+                    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                                            .replace(R.id.frameLayout, fragmentMap)
+                                            .commitAllowingStateLoss();
                     break;
                 case R.id.navigation_my_page:
-                    transaction.replace(R.id.frameLayout, fragmentMyPage).commitAllowingStateLoss();
+                    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                                            .replace(R.id.frameLayout, fragmentMyPage)
+                                            .commitAllowingStateLoss();
                     break;
                 case R.id.navigation_timer:
-                    transaction.replace(R.id.frameLayout, fragmentTimer).commitAllowingStateLoss();
+                    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                                            .replace(R.id.frameLayout, fragmentTimer)
+                                            .commitAllowingStateLoss();
                     break;
             }
             return true;
