@@ -5,4 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.recipe.RecipeFragment">
+
+    <SearchView
+        android:id="@+id/svRecipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/sv_rounded"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/lvSearchRecipe"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/svRecipe" />
 </androidx.constraintlayout.widget.ConstraintLayout>
