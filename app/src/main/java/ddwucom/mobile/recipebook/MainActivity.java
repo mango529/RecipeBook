@@ -1,30 +1,61 @@
 package ddwucom.mobile.recipebook;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
+    private FragmentManager fragmentManager = getSupportFragmentManager();
+    private FragmentHome fragmentHome = new FragmentHome();
+    private FragmentRecipe fragmentRecipe = new FragmentRecipe();
+    private FragmentMap fragmentMap = new FragmentMap();
+    private FragmentMyPage fragmentMyPage = new FragmentMyPage();
+    private FragmentTimer fragmentTimer = new FragmentTimer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.frameLayout, fragmentHome).commitAllowingStateLoss();
+
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_timer, R.id.navigation_recipe, R.id.navigation_my_page, R.id.navigation_map)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+        navView.setSelectedItemId(R.id.navigation_home);
+        navView.setOnNavigationItemSelectedListener(new ItemSelectedListener());
+
     }
 
+    class ItemSelectedListener implements BottomNavigationView.OnNavigationItemSelectedListener{
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+            switch(item.getItemId())
+            {
+                case R.id.navigation_home:
+                    transaction.replace(R.id.frameLayout, fragmentHome).commitAllowingStateLoss();
+                    break;
+                case R.id.navigation_recipe:
+                    transaction.replace(R.id.frameLayout, fragmentRecipe).commitAllowingStateLoss();
+                    break;
+                case R.id.navigation_map:
+                    transaction.replace(R.id.frameLayout, fragmentMap).commitAllowingStateLoss();
+                    break;
+                case R.id.navigation_my_page:
+                    transaction.replace(R.id.frameLayout, fragmentMyPage).commitAllowingStateLoss();
+                    break;
+                case R.id.navigation_timer:
+                    transaction.replace(R.id.frameLayout, fragmentTimer).commitAllowingStateLoss();
+                    break;
+            }
+            return true;
+        }
+    }
 }
