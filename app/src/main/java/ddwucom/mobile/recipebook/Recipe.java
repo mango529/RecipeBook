@@ -1,26 +1,29 @@
 package ddwucom.mobile.recipebook;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Recipe {
-    private int _id;
+    private int recipe_id;
     private String name;
     private String type;
     private int cal;
     private String imageLink;
     private String ingredient;
     private ArrayList<String> manuals;
+    private HashMap<Integer, String> mImageLinks;
 
     public Recipe() {
         manuals = new ArrayList<>();
+        mImageLinks = new HashMap<>();
     }
 
-    public int get_id() {
-        return _id;
+    public int getRecipe_id() {
+        return recipe_id;
     }
 
-    public void set_id(int _id) {
-        this._id = _id;
+    public void setRecipe_id(int recipe_id) {
+        this.recipe_id = recipe_id;
     }
 
     public String getName() {
@@ -69,5 +72,13 @@ public class Recipe {
 
     public void setManuals(ArrayList<String> manuals) {
         this.manuals = manuals;
+    }
+
+    public HashMap<Integer, String> getMImageLinks() {
+        return mImageLinks;
+    }
+
+    public void setMImageLinks(HashMap<Integer, String> mImageLinks) {
+        this.mImageLinks = mImageLinks;
     }
 }

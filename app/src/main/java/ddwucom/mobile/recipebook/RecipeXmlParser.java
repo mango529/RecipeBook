@@ -9,21 +9,23 @@ import java.io.StringReader;
 import java.util.ArrayList;
 
 public class RecipeXmlParser {
-    public enum TagType { NONE, NAME, TYPE, CAL, IMAGE, ING, MANUAL };
+    public enum TagType { NONE, NAME, TYPE, CAL, IMAGE, ING, MANUAL, MANUAL_IMG };
 
     final static String TAG_ROW = "row";
     final static String TAG_NAME = "RCP_NM";
     final static  String TAG_TYPE = "RCP_PAT2";
     final static  String TAG_CAL = "INFO_ENG";
-    final static  String TAG_IMAGE = "image";
+    final static  String TAG_IMAGE = "ATT_FILE_NO_MAIN";
     final static  String TAG_ING = "RCP_PARTS_DTLS";
     final static  String TAG_MANUAL = "MANUAL";
+    final static  String TAG_MANUAL_IMG = "MANUAL_IMG";
+    int endManual = -1;
+    int stepNum;
 
     public RecipeXmlParser() {
     }
 
     public ArrayList<Recipe> parse(String xml) {
-        Log.d("goeun", "parse");
         ArrayList<Recipe> resultList = new ArrayList();
         Recipe dto = null;
 
@@ -54,6 +56,9 @@ public class RecipeXmlParser {
                             if (dto != null) tagType = TagType.IMAGE;
                         } else if (parser.getName().equals(TAG_ING)) {
                             if (dto != null) tagType = TagType.ING;
+                        } else if (parser.getName().contains(TAG_MANUAL_IMG)) {
+                            if (dto != null) tagType = TagType.MANUAL_IMG;
+                            stepNum = Integer.valueOf(parser.getName().substring(10));
                         } else if (parser.getName().contains(TAG_MANUAL)) {
                             if (dto != null) tagType = TagType.MANUAL;
                         }
@@ -82,7 +87,14 @@ public class RecipeXmlParser {
                                 dto.setIngredient(parser.getText());
                                 break;
                             case MANUAL:
-                                dto.getManuals().add(parser.getText());
+                                if (parser.getText().length() != 5) {
+                                    dto.getManuals().add(parser.getText());
+                                }
+                                break;
+                            case MANUAL_IMG:
+                                if (parser.getText().length() != 5) {
+                                    dto.getMImageLinks().put(stepNum, parser.getText());
+                                }
                                 break;
                         }
                         tagType = TagType.NONE;

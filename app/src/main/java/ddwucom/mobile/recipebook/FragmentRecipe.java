@@ -27,11 +27,7 @@ import ddwucom.mobile.recipebook.R;
 public class FragmentRecipe extends Fragment {
     SearchView svRecipe;
     ListView lvSearchRecipe;
-
-    String apiAddress;
     ArrayList<Recipe> recipeList;
-    RecipeXmlParser parser;
-    RecipeNetworkManager networkManager;
     ImageFileManager imgFileManager;
     RecipeAdapter adapter;
 
@@ -45,9 +41,8 @@ public class FragmentRecipe extends Fragment {
         adapter = new RecipeAdapter(getContext(), R.layout.recipe_adapter_view, recipeList);
         lvSearchRecipe.setAdapter(adapter);
 
-        apiAddress = getResources().getString(R.string.api_url);
-        parser = new RecipeXmlParser();
-        networkManager = new RecipeNetworkManager(getContext());
+
+
         imgFileManager = new ImageFileManager(getContext());
 
         svRecipe.setQueryHint("요리 이름을 입력하세요.");
@@ -57,24 +52,20 @@ public class FragmentRecipe extends Fragment {
         searchText.setTypeface(tf);
         searchText.setIncludeFontPadding(false);
 
-        svRecipe.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Log.d("goeun", query);
-                try {
-                    new NetworkAsyncTask().execute(apiAddress
-                            + URLEncoder.encode(query, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+        // 검색 기능 !
+//        svRecipe.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                Log.d("goeun", query);
+//adapter.setList(recipeList);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                return false;
+//            }
+//        });
 
         return view;
     }
@@ -85,33 +76,5 @@ public class FragmentRecipe extends Fragment {
         imgFileManager.clearTemporaryFiles();
     }
 
-    class NetworkAsyncTask extends AsyncTask<String, Void, String> {
-        ProgressDialog progressDlg;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDlg = ProgressDialog.show(getContext(), "Wait", "Downloading...");
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String address = strings[0];
-            Log.d("goeun", address);
-            String result = null;
-
-            result = networkManager.downloadContents(address);
-            if (result == null) return "Error";
-
-            recipeList = parser.parse(result);
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            Log.d("goeun", result);
-            adapter.setList(recipeList);
-            progressDlg.dismiss();
-        }
-    }
 }

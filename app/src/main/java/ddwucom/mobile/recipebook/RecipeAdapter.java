@@ -41,7 +41,7 @@ public class RecipeAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return list.get(position).get_id();
+        return list.get(position).getRecipe_id();
     }
 
     @Override
