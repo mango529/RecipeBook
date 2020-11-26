@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -16,13 +15,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-
-import ddwucom.mobile.recipebook.R;
 
 public class FragmentRecipe extends Fragment {
     SearchView svRecipe;
@@ -30,6 +26,9 @@ public class FragmentRecipe extends Fragment {
     ArrayList<Recipe> recipeList;
     ImageFileManager imgFileManager;
     RecipeAdapter adapter;
+    String apiAddress;
+    RecipeXmlParser parser;
+    RecipeNetworkManager networkManager;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe, container, false);
@@ -41,7 +40,9 @@ public class FragmentRecipe extends Fragment {
         adapter = new RecipeAdapter(getContext(), R.layout.recipe_adapter_view, recipeList);
         lvSearchRecipe.setAdapter(adapter);
 
-
+        apiAddress = getResources().getString(R.string.api_url);
+        parser = new RecipeXmlParser();
+        networkManager = new RecipeNetworkManager(getContext());
 
         imgFileManager = new ImageFileManager(getContext());
 
@@ -52,20 +53,26 @@ public class FragmentRecipe extends Fragment {
         searchText.setTypeface(tf);
         searchText.setIncludeFontPadding(false);
 
-        // 검색 기능 !
-//        svRecipe.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                Log.d("goeun", query);
-//adapter.setList(recipeList);
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
+        svRecipe.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("goeun", query);
+                try {
+                    new NetworkAsyncTask().execute(apiAddress
+                            + URLEncoder.encode(query, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                svRecipe.setQuery("", false);
+                svRecipe.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 
         return view;
     }
@@ -76,5 +83,35 @@ public class FragmentRecipe extends Fragment {
         imgFileManager.clearTemporaryFiles();
     }
 
+    class NetworkAsyncTask extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDlg = new ProgressDialog(getContext(), R.style.AppCompatAlertDialogStyle);
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDlg.setTitle("Wait");
+            progressDlg.setMessage("Downloading...");
+            progressDlg.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String address = strings[0];
+            Log.d("goeun", address);
+            String result = null;
+
+            result = networkManager.downloadContents(address);
+            if (result == null) return "Error";
+
+            recipeList = parser.parse(result);
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.d("goeun", result);
+            adapter.setList(recipeList);
+            progressDlg.dismiss();
+        }
+    }
 }

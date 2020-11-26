@@ -19,7 +19,6 @@ public class RecipeXmlParser {
     final static  String TAG_ING = "RCP_PARTS_DTLS";
     final static  String TAG_MANUAL = "MANUAL";
     final static  String TAG_MANUAL_IMG = "MANUAL_IMG";
-    int endManual = -1;
     int stepNum;
 
     public RecipeXmlParser() {

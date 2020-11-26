@@ -17,4 +17,8 @@
         <item name="android:fontFamily">@font/rubik_light</item>
         <item name="android:textStyle">bold</item>
     </style>
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/pink_100</item>
+        <item name="fontFamily">@font/rubik_semibold</item>
+    </style>
 </resources>

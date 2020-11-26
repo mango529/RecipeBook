@@ -54,6 +54,7 @@ public class RecipeAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.tvRcpName = view.findViewById(R.id.tvRcpName);
             viewHolder.ivRcpImg = view.findViewById(R.id.ivRcpImg);
+            viewHolder.tvRcpType = view.findViewById(R.id.tvRcpType);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder)view.getTag();
@@ -62,19 +63,20 @@ public class RecipeAdapter extends BaseAdapter {
         Recipe dto = list.get(position);
 
         viewHolder.tvRcpName.setText(dto.getName());
+        viewHolder.tvRcpType.setText(dto.getType());
 
         if (dto.getImageLink() == null) {
             viewHolder.ivRcpImg.setImageResource(R.mipmap.ic_launcher);
             return view;
         }
 
-        Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(dto.getImageLink()); // 파일 이름만을 잘라 확인
+        Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(dto.getImageLink());
 
         if (savedBitmap != null) {
             viewHolder.ivRcpImg.setImageBitmap(savedBitmap);
         } else {
-            viewHolder.ivRcpImg.setImageResource(R.mipmap.ic_launcher); // 일단 기본 이미지를 셋팅하고
-            new GetImageAsyncTask(viewHolder).execute(dto.getImageLink()); // 네트워크에서 이미지 다운로드하면 다시 셋팅
+            viewHolder.ivRcpImg.setImageResource(R.mipmap.ic_launcher);
+            new GetImageAsyncTask(viewHolder).execute(dto.getImageLink());
         }
 
         return view;
@@ -88,6 +90,7 @@ public class RecipeAdapter extends BaseAdapter {
     static class ViewHolder {
         public TextView tvRcpName = null;
         public ImageView ivRcpImg = null;
+        public TextView tvRcpType = null;
     }
 
     class GetImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
@@ -111,7 +114,7 @@ public class RecipeAdapter extends BaseAdapter {
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
                 viewHolder.ivRcpImg.setImageBitmap(bitmap);
-                imageFileManager.saveBitmapToTemporary(bitmap, imageAddress); // imageAddress로 filename 만듦
+                imageFileManager.saveBitmapToTemporary(bitmap, imageAddress);
             }
         }
     }
