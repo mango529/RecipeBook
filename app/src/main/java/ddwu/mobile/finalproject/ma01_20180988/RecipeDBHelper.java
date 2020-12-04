@@ -1,4 +1,4 @@
-package ddwucom.mobile.recipebook;
+package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

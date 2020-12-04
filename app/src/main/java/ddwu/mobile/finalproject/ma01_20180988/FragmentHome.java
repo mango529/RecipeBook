@@ -1,4 +1,4 @@
-package ddwucom.mobile.recipebook;
+package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,12 +7,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import ddwucom.mobile.recipebook.R;
+import ddwu.mobile.finalproject.R;
 
-public class FragmentMap extends Fragment {
+public class FragmentHome extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 }

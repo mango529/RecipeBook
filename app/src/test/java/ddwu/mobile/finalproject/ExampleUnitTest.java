@@ -1,4 +1,4 @@
-package ddwucom.mobile.recipebook;
+package ddwu.mobile.finalproject;
 
 import org.junit.Test;
 

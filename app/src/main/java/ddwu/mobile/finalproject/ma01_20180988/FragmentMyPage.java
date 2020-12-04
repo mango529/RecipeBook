@@ -1,16 +1,15 @@
-package ddwucom.mobile.recipebook;
-
-import androidx.lifecycle.ViewModelProvider;
+package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import ddwu.mobile.finalproject.R;
 
 public class FragmentMyPage extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -1,4 +1,4 @@
-package ddwucom.mobile.recipebook;
+package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
@@ -19,6 +19,8 @@ import androidx.fragment.app.Fragment;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+
+import ddwu.mobile.finalproject.R;
 
 public class FragmentRecipe extends Fragment {
     SearchView svRecipe;

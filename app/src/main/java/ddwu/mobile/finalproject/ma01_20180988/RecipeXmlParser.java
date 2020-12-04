@@ -1,6 +1,4 @@
-package ddwucom.mobile.recipebook;
-
-import android.util.Log;
+package ddwu.mobile.finalproject.ma01_20180988;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;

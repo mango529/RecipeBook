@@ -1,4 +1,4 @@
-package ddwucom.mobile.recipebook;
+package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import ddwu.mobile.finalproject.R;
 
 public class RecipeAdapter extends BaseAdapter {
     private LayoutInflater inflater;
