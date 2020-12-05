@@ -1,6 +1,7 @@
 package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,9 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -19,8 +22,6 @@ import androidx.fragment.app.Fragment;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-
-import ddwu.mobile.finalproject.R;
 
 public class FragmentRecipe extends Fragment {
     SearchView svRecipe;
@@ -73,6 +74,15 @@ public class FragmentRecipe extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
+            }
+        });
+
+        lvSearchRecipe.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), RecipeDetailActivity.class);
+                intent.putExtra("recipe", recipeList.get(position));
+                startActivity(intent);
             }
         });
 

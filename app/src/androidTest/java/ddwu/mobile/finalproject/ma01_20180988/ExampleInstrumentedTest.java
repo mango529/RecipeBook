@@ -1,4 +1,4 @@
-package ddwu.mobile.finalproject;
+package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.content.Context;
 

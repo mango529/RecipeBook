@@ -33,11 +33,8 @@ public class RecipeNetworkManager {
         try {
             URL url = new URL(address);
             conn = (HttpURLConnection)url.openConnection();
-            Log.d("goeun", "conn " + conn);
             stream = getNetworkConnection(conn);
-            Log.d("goeun", "stream " + stream);
             result = readStreamToString(stream);
-            Log.d("goeun", result);
             if (stream != null) stream.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,8 +99,8 @@ public class RecipeNetworkManager {
     }
 
     private InputStream getNetworkConnection(HttpURLConnection conn) throws Exception {
-        conn.setReadTimeout(60000);
-        conn.setConnectTimeout(60000);
+        conn.setReadTimeout(10000);
+        conn.setConnectTimeout(10000);
         conn.setRequestMethod("GET");
         conn.setDoInput(true);
         conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
