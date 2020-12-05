@@ -42,14 +42,14 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvDetailManual.setText(manuals.get(position));
 
-        if (mImageLinks.containsKey(position)) {
-            Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(mImageLinks.get(position));
+        if (mImageLinks.containsKey(position + 1)) {
+            Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(mImageLinks.get(position + 1));
 
             if (savedBitmap != null) {
                 holder.ivDetailManualImg.setImageBitmap(savedBitmap);
             } else {
                 holder.ivDetailManualImg.setImageResource(R.mipmap.ic_launcher);
-                new GetImageAsyncTask().execute(mImageLinks.get(position));
+                new GetImageAsyncTask(holder).execute(mImageLinks.get(position + 1));
             }
         }
         else {
@@ -77,10 +77,11 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
 
     class GetImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
-        RecipeAdapter.ViewHolder viewHolder;
+        ViewHolder viewHolder;
         String imageAddress;
 
-        public GetImageAsyncTask() {
+        public GetImageAsyncTask(ViewHolder holder) {
+            viewHolder = holder;
         }
 
         @Override
@@ -94,7 +95,7 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
-                viewHolder.ivRcpImg.setImageBitmap(bitmap);
+                viewHolder.ivDetailManualImg.setImageBitmap(bitmap);
                 imageFileManager.saveBitmapToTemporary(bitmap, imageAddress);
             }
         }
