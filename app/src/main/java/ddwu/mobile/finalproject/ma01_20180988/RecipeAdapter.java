@@ -66,7 +66,6 @@ public class RecipeAdapter extends BaseAdapter {
         viewHolder.tvRcpType.setText(dto.getType());
 
         if (dto.getImageLink() == null) {
-            viewHolder.ivRcpImg.setImageResource(R.mipmap.ic_launcher);
             return view;
         }
 
@@ -75,7 +74,6 @@ public class RecipeAdapter extends BaseAdapter {
         if (savedBitmap != null) {
             viewHolder.ivRcpImg.setImageBitmap(savedBitmap);
         } else {
-            viewHolder.ivRcpImg.setImageResource(R.mipmap.ic_launcher);
             new GetImageAsyncTask(viewHolder).execute(dto.getImageLink());
         }
 

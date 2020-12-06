@@ -49,7 +49,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
             ivDetailRcpImg.setImageBitmap(savedBitmap);
             Log.d(TAG, "Image loading from file");
         } else {
-            ivDetailRcpImg.setImageResource(R.mipmap.ic_launcher);
             new GetImageAsyncTask().execute(recipe.getImageLink());
             Log.d(TAG, "Image loading from network");
         }

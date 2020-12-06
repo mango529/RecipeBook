@@ -32,12 +32,12 @@
             android:id="@+id/ivDetailRcpImg"
             android:layout_width="0dp"
             android:layout_height="250dp"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            tools:srcCompat="@drawable/ic_baseline_image_not_supported_24" />
 
         <TextView
             android:id="@+id/textView3"

@@ -48,12 +48,12 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
             if (savedBitmap != null) {
                 holder.ivDetailManualImg.setImageBitmap(savedBitmap);
             } else {
-                holder.ivDetailManualImg.setImageResource(R.mipmap.ic_launcher);
+                holder.ivDetailManualImg.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
                 new GetImageAsyncTask(holder).execute(mImageLinks.get(position + 1));
             }
         }
         else {
-            holder.ivDetailManualImg.setImageResource(R.mipmap.ic_launcher);
+            holder.ivDetailManualImg.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
         }
 
     }
