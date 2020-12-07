@@ -7,24 +7,20 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager = getSupportFragmentManager();
-    private FragmentHome fragmentHome = new FragmentHome();
-    private FragmentRecipe fragmentRecipe = new FragmentRecipe();
-    private FragmentMap fragmentMap = new FragmentMap();
-    private FragmentMyPage fragmentMyPage = new FragmentMyPage();
-    private FragmentTimer fragmentTimer = new FragmentTimer();
+    private Fragment fragmentHome, fragmentRecipe, fragmentMap, fragmentMyPage, fragmentTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frameLayout, fragmentHome).commitAllowingStateLoss();
+        fragmentHome = new FragmentHome();
+        fragmentManager.beginTransaction().replace(R.id.frameLayout, fragmentHome).commit();
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setSelectedItemId(R.id.navigation_home);
@@ -35,34 +31,68 @@ public class MainActivity extends AppCompatActivity {
     class ItemSelectedListener implements BottomNavigationView.OnNavigationItemSelectedListener{
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
 
             switch(item.getItemId())
             {
                 case R.id.navigation_home:
-                    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                            .replace(R.id.frameLayout, fragmentHome)
-                                            .commitAllowingStateLoss();
+                    if (fragmentHome == null) {
+                        fragmentHome = new FragmentHome();
+                        fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentHome).commit();
+                    }
+
+                    if (fragmentHome != null)  fragmentManager.beginTransaction().show(fragmentHome).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
+                    if (fragmentMap != null)  fragmentManager.beginTransaction().hide(fragmentMap).commit();
+                    if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
+                    if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
+                    if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
                     break;
                 case R.id.navigation_recipe:
-                    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                            .replace(R.id.frameLayout, fragmentRecipe)
-                                            .commitAllowingStateLoss();
+                    if (fragmentRecipe == null) {
+                        fragmentRecipe = new FragmentRecipe();
+                        fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentRecipe).commit();
+                    }
+
+                    if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
+                    if (fragmentMap != null)  fragmentManager.beginTransaction().hide(fragmentMap).commit();
+                    if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
+                    if (fragmentRecipe != null)  fragmentManager.beginTransaction().show(fragmentRecipe).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
+                    if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
                     break;
                 case R.id.navigation_map:
-                    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                            .replace(R.id.frameLayout, fragmentMap)
-                                            .commitAllowingStateLoss();
+                    if (fragmentMap == null) {
+                        fragmentMap = new FragmentMap();
+                        fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentMap).commit();
+                    }
+
+                    if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
+                    if (fragmentMap != null)  fragmentManager.beginTransaction().show(fragmentMap).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
+                    if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
+                    if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
+                    if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
                     break;
                 case R.id.navigation_my_page:
-                    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                            .replace(R.id.frameLayout, fragmentMyPage)
-                                            .commitAllowingStateLoss();
+                    if (fragmentMyPage == null) {
+                        fragmentMyPage = new FragmentMyPage();
+                        fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentMyPage).commit();
+                    }
+
+                    if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
+                    if (fragmentMap != null)  fragmentManager.beginTransaction().hide(fragmentMap).commit();
+                    if (fragmentMyPage != null)  fragmentManager.beginTransaction().show(fragmentMyPage).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
+                    if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
+                    if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
                     break;
                 case R.id.navigation_timer:
-                    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                                            .replace(R.id.frameLayout, fragmentTimer)
-                                            .commitAllowingStateLoss();
+                    if (fragmentTimer == null) {
+                        fragmentTimer = new FragmentTimer();
+                        fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentTimer).commit();
+                    }
+
+                    if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
+                    if (fragmentMap != null)  fragmentManager.beginTransaction().hide(fragmentMap).commit();
+                    if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
+                    if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
+                    if (fragmentTimer != null)  fragmentManager.beginTransaction().show(fragmentTimer).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
                     break;
             }
             return true;
