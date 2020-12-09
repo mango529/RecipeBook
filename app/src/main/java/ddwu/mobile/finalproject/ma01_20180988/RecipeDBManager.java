@@ -20,7 +20,7 @@ public class RecipeDBManager {
         value.put(recipeDBHelper.COL_TYPE, newRecipe.getType());
         value.put(recipeDBHelper.COL_CAL, newRecipe.getCal());
         value.put(recipeDBHelper.COL_IMAGELINK, newRecipe.getImageLink());
-        value.put(recipeDBHelper.COL_INGRE, newRecipe.getIngredient());
+        //value.put(recipeDBHelper.COL_INGRE, newRecipe.getIngredient());
 
         int id = (int) db.insert(RecipeDBHelper.R_TABLE_NAME, null, value);
 

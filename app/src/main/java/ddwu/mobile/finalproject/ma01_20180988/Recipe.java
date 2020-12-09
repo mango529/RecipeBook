@@ -10,11 +10,12 @@ public class Recipe implements Serializable {
     private String type;
     private int cal;
     private String imageLink;
-    private String ingredient;
+    private ArrayList<String>  ingredients;
     private ArrayList<String> manuals;
     private HashMap<Integer, String> mImageLinks;
 
     public Recipe() {
+        ingredients = new ArrayList<>();
         manuals = new ArrayList<>();
         mImageLinks = new HashMap<>();
     }
@@ -59,12 +60,12 @@ public class Recipe implements Serializable {
         this.imageLink = imageLink;
     }
 
-    public String getIngredient() {
-        return ingredient;
+    public ArrayList<String> getIngredients() {
+        return ingredients;
     }
 
-    public void setIngredient(String ingredient) {
-        this.ingredient = ingredient;
+    public void setIngredients(ArrayList<String> ingredients) {
+        this.ingredients = ingredients;
     }
 
     public ArrayList<String> getManuals() {

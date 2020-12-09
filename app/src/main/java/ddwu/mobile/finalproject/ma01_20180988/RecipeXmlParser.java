@@ -5,6 +5,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeXmlParser {
     public enum TagType { NONE, NAME, TYPE, CAL, IMAGE, ING, MANUAL, MANUAL_IMG };
@@ -81,7 +82,7 @@ public class RecipeXmlParser {
                                 dto.setImageLink(parser.getText());
                                 break;
                             case ING:
-                                dto.setIngredient(parser.getText());
+                                dto.getIngredients().addAll(separateIng(parser.getText()));
                                 break;
                             case MANUAL:
                                 if (parser.getText().length() != 5) {
@@ -104,5 +105,20 @@ public class RecipeXmlParser {
         }
 
         return resultList;
+    }
+    
+    public List<String> separateIng(String ingText) {
+        List<String> ingredients = new ArrayList<>();
+
+        String[] temp1 = ingText.split("\n");
+        for (int  i = 1; i < temp1.length; i += 2) {
+            String[] temp2 = temp1[i].split(",");
+            for (String s :  temp2) {
+                ingredients.add(s.trim());
+            }
+        }
+
+
+        return ingredients;
     }
 }

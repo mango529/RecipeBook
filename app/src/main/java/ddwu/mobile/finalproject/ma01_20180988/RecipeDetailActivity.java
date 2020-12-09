@@ -40,7 +40,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         networkManager = new RecipeNetworkManager(this);
 
         tvDetailRcpName.setText(recipe.getName());
-        tvDetailRcpIng.setText(recipe.getIngredient());
+        //tvDetailRcpIng.setText(recipe.getIngredient());
         vpManual.setAdapter(manualAdapter);
 
         Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(recipe.getImageLink()); // 파일 이름만을 잘라 확인
