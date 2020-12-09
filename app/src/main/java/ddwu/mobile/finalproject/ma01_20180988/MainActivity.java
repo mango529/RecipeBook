@@ -1,6 +1,7 @@
 package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,6 +27,25 @@ public class MainActivity extends AppCompatActivity {
         navView.setSelectedItemId(R.id.navigation_home);
         navView.setOnNavigationItemSelectedListener(new ItemSelectedListener());
 
+        String str = getIntent().getStringExtra("notiTimer");
+        if(str !=null)
+        {
+            if(str.equals("notiTimer"))
+            {
+                if (fragmentTimer == null) {
+                    fragmentTimer = new FragmentTimer();
+                    fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentTimer).commit();
+                }
+
+                if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
+                if (fragmentMap != null)  fragmentManager.beginTransaction().hide(fragmentMap).commit();
+                if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
+                if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
+                if (fragmentTimer != null)  fragmentManager.beginTransaction().show(fragmentTimer).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
+
+                navView.setSelectedItemId(R.id.navigation_timer);
+            }
+        }
     }
 
     class ItemSelectedListener implements BottomNavigationView.OnNavigationItemSelectedListener{

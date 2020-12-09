@@ -125,37 +125,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btnTimerStop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:fontFamily="@font/notosanskr_medium"
-            android:includeFontPadding="false"
-            android:text="정지"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:backgroundTint="@color/pink_100"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
-
-        <Button
-            android:id="@+id/btnTimerContinue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:fontFamily="@font/notosanskr_medium"
-            android:includeFontPadding="false"
-            android:text="재개"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:visibility="invisible"
-            app:backgroundTint="@color/pink_100"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
-
-        <Button
             android:id="@+id/btnTimerCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -167,6 +136,7 @@
             android:textStyle="bold"
             app:backgroundTint="@color/pink_100"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
     </androidx.constraintlayout.widget.ConstraintLayout>
