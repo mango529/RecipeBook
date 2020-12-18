@@ -4,7 +4,10 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -16,9 +19,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
     ImageView ivDetailRcpImg;
     TextView tvDetailRcpName;
-    TextView tvDetailRcpIng;
+    ListView lvDetailIngre;
     ViewPager2 vpManual;
 
+    ArrayAdapter ingredientAdapter;
     ManualAdapter manualAdapter;
     ImageFileManager imageFileManager;
     RecipeNetworkManager networkManager;
@@ -32,18 +36,20 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         ivDetailRcpImg = findViewById(R.id.ivDetailRcpImg);
         tvDetailRcpName = findViewById(R.id.tvDetailRcpName);
-        tvDetailRcpIng = findViewById(R.id.tvDetailRcpIng);
+        lvDetailIngre = findViewById(R.id.lvDetailIngre);
         vpManual = findViewById(R.id.vpManual);
 
+        Log.d("goeun", "사이즈 " + recipe.getIngredients().size());
+        ingredientAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, recipe.getIngredients());
         manualAdapter = new ManualAdapter(this, recipe.getManuals(), recipe.getMImageLinks());
         imageFileManager = new ImageFileManager(this);
         networkManager = new RecipeNetworkManager(this);
 
+        lvDetailIngre.setAdapter(ingredientAdapter);
         tvDetailRcpName.setText(recipe.getName());
-        //tvDetailRcpIng.setText(recipe.getIngredient());
         vpManual.setAdapter(manualAdapter);
 
-        Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(recipe.getImageLink()); // 파일 이름만을 잘라 확인
+        Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(recipe.getImageLink());
 
         if (savedBitmap != null) {
             ivDetailRcpImg.setImageBitmap(savedBitmap);

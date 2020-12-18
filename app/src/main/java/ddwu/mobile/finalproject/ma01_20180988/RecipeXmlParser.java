@@ -1,5 +1,6 @@
 package ddwu.mobile.finalproject.ma01_20180988;
 
+import org.jetbrains.annotations.NotNull;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -85,8 +86,12 @@ public class RecipeXmlParser {
                                 dto.getIngredients().addAll(separateIng(parser.getText()));
                                 break;
                             case MANUAL:
-                                if (parser.getText().length() != 5) {
-                                    dto.getManuals().add(parser.getText());
+                                String mTemp = parser.getText();
+                                if (mTemp.length() != 5) {
+                                    if (mTemp.charAt(mTemp.length()-1) == 'a'  || mTemp.charAt(mTemp.length()-1) == 'b' || mTemp.charAt(mTemp.length()-1) == 'c') {
+                                        mTemp = mTemp.substring(0, mTemp.length() - 1);
+                                    }
+                                    dto.getManuals().add(mTemp);
                                 }
                                 break;
                             case MANUAL_IMG:
@@ -107,13 +112,21 @@ public class RecipeXmlParser {
         return resultList;
     }
     
-    public List<String> separateIng(String ingText) {
+    public List<String> separateIng(@NotNull String ingText) {
         List<String> ingredients = new ArrayList<>();
 
-        String[] temp1 = ingText.split("\n");
-        for (int  i = 1; i < temp1.length; i += 2) {
-            String[] temp2 = temp1[i].split(",");
-            for (String s :  temp2) {
+        if (ingText.contains("\n")) {
+            String[] temp1 = ingText.split("\n");
+            for (int  i = 1; i < temp1.length; i += 2) {
+                String[] temp2 = temp1[i].split(",");
+                for (String s :  temp2) {
+                    ingredients.add(s.trim());
+                }
+            }
+        }
+        else {
+            String[] temp1 = ingText.split(",");
+            for (String s :  temp1) {
                 ingredients.add(s.trim());
             }
         }

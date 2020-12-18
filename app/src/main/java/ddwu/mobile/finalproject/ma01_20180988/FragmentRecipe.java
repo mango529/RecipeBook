@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -43,7 +42,7 @@ public class FragmentRecipe extends Fragment {
         adapter = new RecipeAdapter(getContext(), R.layout.recipe_adapter_view, recipeList);
         lvSearchRecipe.setAdapter(adapter);
 
-        apiAddress = getResources().getString(R.string.api_url);
+        apiAddress = getResources().getString(R.string.recipe_api_url);
         parser = new RecipeXmlParser();
         networkManager = new RecipeNetworkManager(getContext());
 
