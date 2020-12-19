@@ -2,6 +2,7 @@ package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,9 +24,13 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        networkManager = new NetworkManager(this);
-        productList = new ArrayList<>();
-        parser = new ProductXmlParser();
+        SharedPreferences pref = getSharedPreferences("config", 0);
+
+        if (pref.getBoolean("first", true)) {
+            networkManager = new NetworkManager(this);
+            productList = new ArrayList<>();
+            parser = new ProductXmlParser();
+        }
 
         Handler hd = new Handler();
         hd.postDelayed(new SplashHandler(), 3000);
@@ -68,8 +73,20 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            ProductDBManager productDBManager = new ProductDBManager(SplashActivity.this);
+            for (Product p : productList) {
+                productDBManager.insertProductInfo(p);
+            }
+
+            SharedPreferences pref = getSharedPreferences("config", 0);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("first", false);
+            editor.commit();
 
             progressDlg.dismiss();
+            Handler hd = new Handler();
+            hd.postDelayed(new SplashHandler(), 1000);
+            getSupportActionBar().hide();
         }
     }
 }

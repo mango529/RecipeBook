@@ -12,11 +12,11 @@ public class ProductDBManager {
         this.productDBHelper = new ProductDBHelper(context);
     }
 
-    public boolean insertProductInfo(String name, int goodId) {
+    public boolean insertProductInfo(Product product) {
         SQLiteDatabase db = productDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(productDBHelper.COL_NAME, name);
-        values.put(productDBHelper.COL_GOOD_ID, goodId);
+        values.put(productDBHelper.COL_NAME, product.getName());
+        values.put(productDBHelper.COL_GOOD_ID, product.getGoodId());
         int id = (int) db.insert(productDBHelper.TABLE_NAME, null, values);
         if (id > 0) return true;
         return false;
