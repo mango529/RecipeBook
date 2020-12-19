@@ -30,7 +30,7 @@ public class FragmentRecipe extends Fragment {
     RecipeAdapter adapter;
     String apiAddress;
     RecipeXmlParser parser;
-    RecipeNetworkManager networkManager;
+    NetworkManager networkManager;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe, container, false);
@@ -44,7 +44,7 @@ public class FragmentRecipe extends Fragment {
 
         apiAddress = getResources().getString(R.string.recipe_api_url);
         parser = new RecipeXmlParser();
-        networkManager = new RecipeNetworkManager(getContext());
+        networkManager = new NetworkManager(getContext());
 
         imgFileManager = new ImageFileManager(getContext());
 

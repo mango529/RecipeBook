@@ -16,10 +16,10 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class RecipeNetworkManager {
+public class NetworkManager {
     private Context context;
 
-    public RecipeNetworkManager(Context context) {
+    public NetworkManager(Context context) {
         this.context = context;
     }
 

@@ -17,7 +17,7 @@ public class RecipeAdapter extends BaseAdapter {
     private Context context;
     private int layout;
     private ArrayList<Recipe> list;
-    private RecipeNetworkManager networkManager = null;
+    private NetworkManager networkManager = null;
     private ImageFileManager imageFileManager = null;
 
     public RecipeAdapter(Context context, int resource, ArrayList<Recipe> list) {
@@ -25,7 +25,7 @@ public class RecipeAdapter extends BaseAdapter {
         this.layout = resource;
         this.list = list;
         imageFileManager = new ImageFileManager(context);
-        networkManager = new RecipeNetworkManager(context);
+        networkManager = new NetworkManager(context);
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

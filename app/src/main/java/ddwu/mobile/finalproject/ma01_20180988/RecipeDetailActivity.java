@@ -7,7 +7,6 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -25,7 +24,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     ArrayAdapter ingredientAdapter;
     ManualAdapter manualAdapter;
     ImageFileManager imageFileManager;
-    RecipeNetworkManager networkManager;
+    NetworkManager networkManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,7 +42,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         ingredientAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, recipe.getIngredients());
         manualAdapter = new ManualAdapter(this, recipe.getManuals(), recipe.getMImageLinks());
         imageFileManager = new ImageFileManager(this);
-        networkManager = new RecipeNetworkManager(this);
+        networkManager = new NetworkManager(this);
 
         lvDetailIngre.setAdapter(ingredientAdapter);
         tvDetailRcpName.setText(recipe.getName());

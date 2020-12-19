@@ -21,14 +21,14 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
     private ArrayList<String> manuals;
     private HashMap<Integer, String> mImageLinks;
 
-    private RecipeNetworkManager networkManager;
+    private NetworkManager networkManager;
     private ImageFileManager imageFileManager;
 
     public ManualAdapter(Context context, ArrayList<String> manuals, HashMap<Integer, String> mImageLinks) {
         this.manuals = manuals;
         this.mImageLinks = mImageLinks;
         imageFileManager = new ImageFileManager(context);
-        networkManager = new RecipeNetworkManager(context);
+        networkManager = new NetworkManager(context);
     }
 
     @NonNull
