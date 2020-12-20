@@ -7,10 +7,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class SplashActivity extends AppCompatActivity {
@@ -18,23 +23,36 @@ public class SplashActivity extends AppCompatActivity {
     NetworkManager networkManager;
     ArrayList<Product> productList;
     ProductXmlParser parser;
+    String apiAddress;
+    String apiKey;
+
+    TextView tvDownload;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        getSupportActionBar().hide();
         SharedPreferences pref = getSharedPreferences("config", 0);
 
         if (pref.getBoolean("first", true)) {
             networkManager = new NetworkManager(this);
             productList = new ArrayList<>();
             parser = new ProductXmlParser();
-        }
 
-        Handler hd = new Handler();
-        hd.postDelayed(new SplashHandler(), 3000);
-        getSupportActionBar().hide();
+            tvDownload = findViewById(R.id.tvDownload);
+            tvDownload.setVisibility(View.VISIBLE);
+
+            apiAddress = getResources().getString(R.string.goodId_api_url);
+            apiKey = getResources().getString(R.string.product_api_key);
+
+            new NetworkAsyncTask().execute(apiAddress + apiKey);
+        }
+        else {
+            Handler hd = new Handler();
+            hd.postDelayed(new SplashHandler(), 3000);
+        }
     }
 
     private class SplashHandler implements Runnable{
@@ -48,16 +66,6 @@ public class SplashActivity extends AppCompatActivity {
     public void onBackPressed() { }
 
     class NetworkAsyncTask extends AsyncTask<String, Void, String> {
-        ProgressDialog progressDlg = new ProgressDialog(SplashActivity.this, R.style.AppCompatAlertDialogStyle);
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDlg.setTitle("Wait");
-            progressDlg.setMessage("Downloading...");
-            progressDlg.show();
-        }
-
         @Override
         protected String doInBackground(String... strings) {
             String address = strings[0];
@@ -83,10 +91,8 @@ public class SplashActivity extends AppCompatActivity {
             editor.putBoolean("first", false);
             editor.commit();
 
-            progressDlg.dismiss();
             Handler hd = new Handler();
             hd.postDelayed(new SplashHandler(), 1000);
-            getSupportActionBar().hide();
         }
     }
 }
