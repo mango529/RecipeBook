@@ -25,7 +25,7 @@ public class RecipeXmlParser {
     }
 
     public ArrayList<Recipe> parse(String xml) {
-        ArrayList<Recipe> resultList = new ArrayList();
+        ArrayList<Recipe> resultList = new ArrayList<>();
         Recipe dto = null;
 
         TagType tagType = TagType.NONE;
@@ -57,7 +57,7 @@ public class RecipeXmlParser {
                             if (dto != null) tagType = TagType.ING;
                         } else if (parser.getName().contains(TAG_MANUAL_IMG)) {
                             if (dto != null) tagType = TagType.MANUAL_IMG;
-                            stepNum = Integer.valueOf(parser.getName().substring(10));
+                            stepNum = Integer.parseInt(parser.getName().substring(10));
                         } else if (parser.getName().contains(TAG_MANUAL)) {
                             if (dto != null) tagType = TagType.MANUAL;
                         }
@@ -77,7 +77,7 @@ public class RecipeXmlParser {
                                 dto.setType(parser.getText());
                                 break;
                             case CAL:
-                                dto.setCal(Integer.valueOf(parser.getText()));
+                                dto.setCal(Integer.parseInt(parser.getText()));
                                 break;
                             case IMAGE:
                                 dto.setImageLink(parser.getText());

@@ -3,6 +3,7 @@ package ddwu.mobile.finalproject.ma01_20180988;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -12,11 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -32,10 +36,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class FragmentMap extends Fragment implements OnMapReadyCallback {
     final static int PERMISSION_REQ_CODE = 100;
 
     private View view;
+    private SearchView svStore;
     private MapView mapView;
     private GoogleMap mGoogleMap;
     private LocationManager locationManager;
@@ -44,6 +52,37 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_map, container, false);
+
+        svStore = view.findViewById(R.id.svStore);
+        
+        svStore.setQueryHint("재료를 입력하세요.");
+        int id = svStore.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        Typeface tf = ResourcesCompat.getFont(getContext(), R.font.notosanskr_regular);
+        TextView searchText = (TextView) svStore.findViewById(id);
+        searchText.setTypeface(tf);
+        searchText.setIncludeFontPadding(false);
+
+        svStore.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("goeun", query);
+              //  try {
+                   // new NetworkAsyncTask().execute(apiAddress
+                  //          + URLEncoder.encode(query, "UTF-8"));
+           //     } catch (UnsupportedEncodingException e) {
+                //    e.printStackTrace();
+            //    }
+                svStore.setQuery("", false);
+                svStore.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         return view;
     }
 
