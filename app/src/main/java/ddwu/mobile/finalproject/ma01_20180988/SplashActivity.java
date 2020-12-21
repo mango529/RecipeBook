@@ -47,7 +47,10 @@ public class SplashActivity extends AppCompatActivity {
             apiAddress = getResources().getString(R.string.goodId_api_url);
             apiKey = getResources().getString(R.string.product_api_key);
 
-            new NetworkAsyncTask().execute(apiAddress + apiKey);
+            String add = apiAddress + "AR&" + apiKey;
+            Log.d(TAG, "add " +  add);
+
+            new NetworkAsyncTask().execute(add);
         }
         else {
             Handler hd = new Handler();

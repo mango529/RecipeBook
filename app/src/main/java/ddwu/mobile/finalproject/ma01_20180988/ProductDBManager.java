@@ -18,15 +18,10 @@ public class ProductDBManager {
         ContentValues values = new ContentValues();
         values.put(productDBHelper.COL_NAME, product.getName());
         values.put(productDBHelper.COL_GOOD_ID, product.getGoodId());
+        values.put(productDBHelper.COL_DETAIL, product.getDetail());
         int id = (int) db.insert(productDBHelper.TABLE_NAME, null, values);
         if (id > 0) return true;
+        productDBHelper.close();
         return false;
-    }
-
-    public Cursor findProductsByName(String name) {
-        Cursor cursor;
-        SQLiteDatabase db = productDBHelper.getReadableDatabase();
-        cursor = db.rawQuery("select * from " + productDBHelper.TABLE_NAME + " where name like '%" + name + "%';", null);
-        return cursor;
     }
 }

@@ -1,6 +1,7 @@
 package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.nfc.Tag;
+import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -11,11 +12,12 @@ import java.util.ArrayList;
 public class ProductXmlParser {
     private static final String TAG = "ProductXmlParser";
 
-    public enum TagType { NONE, NAME, GOOD_ID };
+    public enum TagType { NONE, NAME, GOOD_ID, DETAIL };
 
     final static String TAG_ITEM = "item";
     final static String TAG_NAME = "goodName";
-    final static  String TAG_GOOD_ID = "goodId";
+    final static String TAG_GOOD_ID = "goodId";
+    final static String TAG_DETAIL = "detailMean";
 
     public ProductXmlParser() {
     }
@@ -42,6 +44,8 @@ public class ProductXmlParser {
                             if (dto != null) tagType = TagType.NAME;
                         } else if (parser.getName().equals(TAG_GOOD_ID)) {
                             if (dto != null) tagType = TagType.GOOD_ID;
+                        } else if (parser.getName().equals(TAG_DETAIL)) {
+                            if (dto != null) tagType = TagType.DETAIL;
                         }
                         break;
                     case XmlPullParser.END_TAG:
@@ -53,10 +57,16 @@ public class ProductXmlParser {
                     case XmlPullParser.TEXT:
                         switch (tagType) {
                             case NAME:
+                                Log.d(TAG, "NAME " + parser.getText());
                                 dto.setName(parser.getText());
                                 break;
                             case GOOD_ID:
-                                dto.setGoodId(Integer.valueOf(parser.getText()));
+                                Log.d(TAG, "GOOD_ID " + Integer.parseInt(parser.getText()));
+                                dto.setGoodId(Integer.parseInt(parser.getText()));
+                                break;
+                            case DETAIL:
+                                Log.d(TAG, "DETAIL " + parser.getText());
+                                dto.setDetail(parser.getText());
                                 break;
                         }
                         tagType = TagType.NONE;

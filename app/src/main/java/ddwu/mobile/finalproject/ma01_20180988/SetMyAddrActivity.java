@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class SetMyAddrActivity extends AppCompatActivity {
     private static final String TAG = "SetMyAddrActivity";
@@ -48,7 +46,7 @@ public class SetMyAddrActivity extends AppCompatActivity {
         apiAddress = getResources().getString(R.string.area_api_url);
         apiKey = getResources().getString(R.string.product_api_key);
 
-        new NetworkAsyncTask().execute(apiAddress + apiKey);
+        new NetworkAsyncTask().execute(apiAddress + "AR&" + apiKey);
 
         lvArea.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

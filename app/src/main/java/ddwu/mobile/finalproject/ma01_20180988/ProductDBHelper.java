@@ -12,6 +12,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
     public final static String COL_ID = "_id";
     public final static String COL_NAME = "name";
     public final static String COL_GOOD_ID = "goodId";
+    public final static String COL_DETAIL = "detail";
 
     public ProductDBHelper(Context context) {
         super(context, DB_NAME, null, 1);
@@ -19,7 +20,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql = "CREATE TABLE " + TABLE_NAME + " (" + COL_ID + " integer primary key autoincrement, " +
-                COL_NAME + " TEXT, " + COL_GOOD_ID + " integer)";
+                COL_NAME + " TEXT, " + COL_DETAIL + " TEXT, " + COL_GOOD_ID + " integer)";
         Log.d(TAG, sql);
         db.execSQL(sql);
     }

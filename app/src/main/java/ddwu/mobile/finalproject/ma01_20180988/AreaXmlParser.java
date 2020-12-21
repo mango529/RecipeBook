@@ -1,7 +1,5 @@
 package ddwu.mobile.finalproject.ma01_20180988;
 
-import android.util.Log;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -16,7 +14,7 @@ public class AreaXmlParser {
 
     int sec = 1;
 
-    public AreaXmlParser () {}
+    public AreaXmlParser() {}
 
     public ArrayList<Area> parse(String xml) {
         ArrayList<Area> resultList = new ArrayList<>();

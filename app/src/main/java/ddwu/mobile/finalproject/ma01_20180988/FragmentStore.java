@@ -6,6 +6,8 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.CursorWindow;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
@@ -36,12 +38,15 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.lang.reflect.Field;
+
 public class FragmentStore extends Fragment implements OnMapReadyCallback {
     final static int PERMISSION_REQ_CODE = 100;
 
     private View view;
     private SearchView svStore;
     private MapView mapView;
+    private TextView tvSelGoodName, tvSelGoodDetail;
     private GoogleMap mGoogleMap;
     private LocationManager locationManager;
     private SimpleCursorAdapter cursorAdapter;
@@ -56,6 +61,8 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
 
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         svStore = view.findViewById(R.id.svStore);
+        tvSelGoodName = view.findViewById(R.id.tvSelGoodName);
+        tvSelGoodDetail = view.findViewById(R.id.tvSelGoodDetail);
 
         cursorAdapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_list_item_1, null,
                 new String[] {"name"}, new int[] {android.R.id.text1}, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
@@ -65,6 +72,7 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
         svStore.setIconifiedByDefault(false);
         svStore.setSuggestionsAdapter(cursorAdapter);
         svStore.setQueryHint("재료를 입력하세요.");
+
         int id = svStore.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         Typeface tf = ResourcesCompat.getFont(getContext(), R.font.notosanskr_regular);
         TextView searchText = (TextView) svStore.findViewById(id);
@@ -80,9 +88,9 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                ProductDBManager productDBManager = new ProductDBManager(getContext());
-                Log.d("goeun", newText);
-                cursor = productDBManager.findProductsByName(newText);
+                ProductDBHelper productDBHelper = new ProductDBHelper(getContext());
+                SQLiteDatabase db = productDBHelper.getReadableDatabase();
+                cursor = db.rawQuery("select _id, name, detail, goodId from " + productDBHelper.TABLE_NAME + " where name like '%" + newText + "%';", null);
                 cursorAdapter.changeCursor(cursor);
                 return false;
             }
@@ -97,7 +105,11 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onSuggestionClick(int position) {
                 Cursor c = (Cursor) cursorAdapter.getItem(position);
-
+                tvSelGoodName.setText(c.getString(c.getColumnIndex(ProductDBHelper.COL_NAME)));
+                if (c.getString(c.getColumnIndex(ProductDBHelper.COL_DETAIL)) != null) {
+                    tvSelGoodDetail.setVisibility(View.VISIBLE);
+                    tvSelGoodDetail.setText(c.getString(c.getColumnIndex(ProductDBHelper.COL_DETAIL)));
+                }
                 return false;
             }
         });
@@ -126,7 +138,7 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
         locationUpdate();
 
         if (checkPermission()) {
-            mGoogleMap.setMyLocationEnabled(true); // ACCESS_FINE_LOCATION 퍼미션을 필요로 함
+            mGoogleMap.setMyLocationEnabled(true);
         }
     }
 
@@ -166,7 +178,7 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_REQ_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 locationUpdate();
             } else {
                 Toast.makeText(getContext(), "앱 실행을 위해 권한 허용이 필요함", Toast.LENGTH_SHORT).show();
@@ -204,6 +216,12 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
             //adapter.setList(recipeList);
             progressDlg.dismiss();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (cursor != null) cursor.close();
     }
 }
 

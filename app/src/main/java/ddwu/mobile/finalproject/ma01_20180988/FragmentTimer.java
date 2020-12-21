@@ -67,8 +67,19 @@ public class FragmentTimer extends Fragment {
         btnTimerStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clTimerSet.setVisibility(View.INVISIBLE);
-                clTimerStart.setVisibility(View.VISIBLE);
+                clTimerSet.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        clTimerSet.setVisibility(View.INVISIBLE);
+                    }
+                });
+                clTimerStart.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        clTimerStart.setVisibility(View.VISIBLE);
+                    }
+                });
+
                 hour = npHour.getValue();
                 minute = npMinute.getValue();
                 second = npSecond.getValue();
@@ -83,11 +94,19 @@ public class FragmentTimer extends Fragment {
                 calendar.add(Calendar.MILLISECOND, millis);
 
                 alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), sender);
+                Log.d("goeun", " get " +calendar.getTimeInMillis() );
 
                 countDownTimer = new CountDownTimer(millis + 1000,1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        tvTimer.setText(String.format("%02d : %02d : %02d", hour, minute, second));
+                        Toast.makeText(getContext(), String.format("%02d : %02d : %02d", hour, minute, second), Toast.LENGTH_SHORT).show();
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                tvTimer.setText(String.format("%02d : %02d : %02d", hour, minute, second));
+                            }
+                        });
+
                         if (second == 0 ) {
                             minute--;
                             second = 59;

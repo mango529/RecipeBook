@@ -6,6 +6,7 @@ public class Product {
     private int _id;
     private String name;
     private int goodId;
+    private String detail;
 
     public Product() {
     }
@@ -32,5 +33,13 @@ public class Product {
 
     public void setGoodId(int goodId) {
         this.goodId = goodId;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 }
