@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (fragmentHome != null)  fragmentManager.beginTransaction().show(fragmentHome).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
-                    fragmentManager.beginTransaction().hide(fragmentStore).commit();
+                    if (fragmentStore != null)  fragmentManager.beginTransaction().hide(fragmentStore).commit();
                     if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
                     if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
                     if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
-                    fragmentManager.beginTransaction().hide(fragmentStore).commit();
+                    if (fragmentStore != null) fragmentManager.beginTransaction().hide(fragmentStore).commit();
                     if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
                     if (fragmentRecipe != null)  fragmentManager.beginTransaction().show(fragmentRecipe).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
                     if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
-                    fragmentManager.beginTransaction().hide(fragmentStore).commit();
+                    if (fragmentStore != null)  fragmentManager.beginTransaction().hide(fragmentStore).commit();
                     if (fragmentMyPage != null)  fragmentManager.beginTransaction().show(fragmentMyPage).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
                     if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
                     if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
-                    fragmentManager.beginTransaction().hide(fragmentStore).commit();
+                    if (fragmentStore != null)  fragmentManager.beginTransaction().hide(fragmentStore).commit();
                     if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
                     if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
                     if (fragmentTimer != null)  fragmentManager.beginTransaction().show(fragmentTimer).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();

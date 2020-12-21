@@ -1,68 +1,67 @@
 package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.Manifest;
-import android.app.ProgressDialog;
-import android.app.SearchManager;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.SearchView;
-import android.widget.SimpleCursorAdapter;
+import android.view.Window;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.Dictionary;
 import java.util.List;
+
+import noman.googleplaces.NRPlaces;
+import noman.googleplaces.PlaceType;
+import noman.googleplaces.PlacesException;
+import noman.googleplaces.PlacesListener;
 
 
 public class FragmentStore extends Fragment implements OnMapReadyCallback {
     final static int PERMISSION_REQ_CODE = 100;
 
     private View view;
-    private SearchView svStore;
     private MapView mapView;
-    private ConstraintLayout clSelGood;
-    private TextView tvSelGoodName, tvSelGoodDetail;
     private GoogleMap mGoogleMap;
+    private MarkerOptions markerOptions;
     private LocationManager locationManager;
-    private SimpleCursorAdapter cursorAdapter;
-    private Cursor cursor;
-    private LocationRequest locationRequest;
-    private NetworkManager networkManager;
-    private String apiAddress, apiKey;
-    private String areaCode;
+    private List<String> placeTypes;
+    private PlacesClient placesClient;
+    private LatLng currentLoc;
 
     public FragmentStore() {}
 
@@ -70,6 +69,13 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
         view = inflater.inflate(R.layout.fragment_store, container, false);
 
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+
+        Places.initialize(getActivity().getApplicationContext(), getString(R.string.map_api_key));
+        placesClient = Places.createClient(getContext());
+
+        placeTypes = new ArrayList<>();
+        placeTypes.add(PlaceType.DEPARTMENT_STORE);
+        placeTypes.add(PlaceType.STORE);
 
         return view;
     }
@@ -90,12 +96,103 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
-        mGoogleMap.setPadding(0, 200, 0, 0);
 
         locationUpdate();
 
         if (checkPermission()) {
             mGoogleMap.setMyLocationEnabled(true);
+        }
+        markerOptions = new MarkerOptions();
+
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if(location==null) {
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
+        if(location!=null) {
+            findStore(location);
+        }
+
+        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                String placeId = marker.getTag().toString();
+                List<Place.Field> placeFields  = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.PHONE_NUMBER, Place.Field.ADDRESS);
+                FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
+                placesClient.fetchPlace(request).addOnSuccessListener(new OnSuccessListener<FetchPlaceResponse>() {
+                    @Override
+                    public void onSuccess(FetchPlaceResponse response) {
+                        Place place = response.getPlace();
+                        openPlaceDetail(place);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        if (e instanceof ApiException) {
+                            ApiException apiException = (ApiException) e;
+                            int statusCode = apiException.getStatusCode();
+                            Log.e("goeun", apiException.getMessage() + statusCode);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void getPlaceDetail(String placeId) {
+
+    }
+
+    private void openPlaceDetail(Place place) {
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_place_detail);
+        TextView tvPlaceName = dialog.findViewById(R.id.tvPlaceName);
+        TextView tvPlacePhoneNumber = dialog.findViewById(R.id.tvPlacePhoneNumber);
+        TextView tvPlaceAddr = dialog.findViewById(R.id.tvPlaceAddr);
+        tvPlaceName.setText(place.getName());
+        if (place.getPhoneNumber() != null) tvPlacePhoneNumber.setText(place.getPhoneNumber());
+        tvPlaceAddr.setText(place.getAddress());
+        dialog.show();
+    }
+
+    PlacesListener placesListener = new PlacesListener() {
+        @Override
+        public void onPlacesSuccess(final List<noman.googleplaces.Place> places) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    for (noman.googleplaces.Place place : places) {
+                        markerOptions.title(place.getName());
+                        markerOptions.snippet(place.getTypes()[0]);
+                        markerOptions.position(new LatLng(place.getLatitude(), place.getLongitude()));
+                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_RED
+                        ));
+                        Marker newMarker = mGoogleMap.addMarker(markerOptions);
+                        newMarker.setTag(place.getPlaceId());
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onPlacesFailure(PlacesException e) {}
+
+        @Override
+        public void onPlacesStart() {}
+
+        @Override
+        public void onPlacesFinished() {}
+    };
+
+    private void findStore(Location location) {
+        for (String type : placeTypes) {
+            new NRPlaces.Builder().listener(placesListener)
+                    .key(getString(R.string.map_api_key))
+                    .latlng(location.getLatitude(), location.getLongitude())
+                    .radius(300)
+                    .type(type)
+                    .build()
+                    .execute();
         }
     }
 
@@ -108,7 +205,7 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
     LocationListener locationListener = new LocationListener() {
            @Override
            public void onLocationChanged(Location location) {
-               LatLng currentLoc = new LatLng(location.getLatitude(), location.getLongitude());
+               currentLoc = new LatLng(location.getLatitude(), location.getLongitude());
                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 17));
            }
 

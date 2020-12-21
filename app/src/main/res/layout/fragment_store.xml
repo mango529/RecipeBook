@@ -16,6 +16,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:uiZoomControls = "true" />
+        app:uiZoomControls = "true"
+        app:cameraTargetLat="37.604094"
+        app:cameraTargetLng="127.042463"
+        app:cameraZoom="13"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
