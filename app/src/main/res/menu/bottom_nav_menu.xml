@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_map"
-        android:icon="@drawable/ic_baseline_map_24"
-        android:title="@string/title_map" />
+        android:id="@+id/navigation_store"
+        android:icon="@drawable/ic_baseline_storefront_24"
+        android:title="@string/title_store" />
     <item
         android:id="@+id/navigation_timer"
         android:icon="@drawable/ic_baseline_timer_24"

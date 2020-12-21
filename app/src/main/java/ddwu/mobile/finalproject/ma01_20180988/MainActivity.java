@@ -1,7 +1,6 @@
 package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -13,7 +12,7 @@ import androidx.fragment.app.FragmentManager;
 
 public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager = getSupportFragmentManager();
-    private Fragment fragmentHome, fragmentRecipe, fragmentMap, fragmentMyPage, fragmentTimer;
+    private Fragment fragmentHome, fragmentRecipe, fragmentStore, fragmentMyPage, fragmentTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
-                if (fragmentMap != null)  fragmentManager.beginTransaction().hide(fragmentMap).commit();
+                if (fragmentStore != null)  fragmentManager.beginTransaction().hide(fragmentStore).commit();
                 if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
                 if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
                 if (fragmentTimer != null)  fragmentManager.beginTransaction().show(fragmentTimer).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (fragmentHome != null)  fragmentManager.beginTransaction().show(fragmentHome).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
-                    if (fragmentMap != null)  fragmentManager.beginTransaction().hide(fragmentMap).commit();
+                    if (fragmentStore != null)  fragmentManager.beginTransaction().hide(fragmentStore).commit();
                     if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
                     if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
                     if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
@@ -73,19 +72,19 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
-                    if (fragmentMap != null)  fragmentManager.beginTransaction().hide(fragmentMap).commit();
+                    if (fragmentStore != null)  fragmentManager.beginTransaction().hide(fragmentStore).commit();
                     if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
                     if (fragmentRecipe != null)  fragmentManager.beginTransaction().show(fragmentRecipe).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
                     if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
                     break;
-                case R.id.navigation_map:
-                    if (fragmentMap == null) {
-                        fragmentMap = new FragmentMap();
-                        fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentMap).commit();
+                case R.id.navigation_store:
+                    if (fragmentStore == null) {
+                        fragmentStore = new FragmentStore();
+                        fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentStore).commit();
                     }
 
                     if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
-                    if (fragmentMap != null)  fragmentManager.beginTransaction().show(fragmentMap).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
+                    if (fragmentStore != null)  fragmentManager.beginTransaction().show(fragmentStore).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
                     if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
                     if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
                     if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
-                    if (fragmentMap != null)  fragmentManager.beginTransaction().hide(fragmentMap).commit();
+                    if (fragmentStore != null)  fragmentManager.beginTransaction().hide(fragmentStore).commit();
                     if (fragmentMyPage != null)  fragmentManager.beginTransaction().show(fragmentMyPage).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
                     if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
                     if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
@@ -109,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
-                    if (fragmentMap != null)  fragmentManager.beginTransaction().hide(fragmentMap).commit();
+                    if (fragmentStore != null)  fragmentManager.beginTransaction().hide(fragmentStore).commit();
                     if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
                     if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
                     if (fragmentTimer != null)  fragmentManager.beginTransaction().show(fragmentTimer).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MA01_20180988</string>
     <string name="title_home">Home</string>
-    <string name="title_map">Map</string>
+    <string name="title_store">Store</string>
     <string name="title_timer">Timer</string>
     <string name="title_recipe">Recipe</string>
     <string name="title_myPage">MyPage</string>
