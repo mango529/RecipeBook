@@ -67,18 +67,8 @@ public class FragmentTimer extends Fragment {
         btnTimerStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clTimerSet.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        clTimerSet.setVisibility(View.INVISIBLE);
-                    }
-                });
-                clTimerStart.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        clTimerStart.setVisibility(View.VISIBLE);
-                    }
-                });
+                clTimerSet.setVisibility(View.INVISIBLE);
+                clTimerStart.setVisibility(View.VISIBLE);
 
                 hour = npHour.getValue();
                 minute = npMinute.getValue();
@@ -99,13 +89,7 @@ public class FragmentTimer extends Fragment {
                 countDownTimer = new CountDownTimer(millis + 1000,1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        Toast.makeText(getContext(), String.format("%02d : %02d : %02d", hour, minute, second), Toast.LENGTH_SHORT).show();
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                tvTimer.setText(String.format("%02d : %02d : %02d", hour, minute, second));
-                            }
-                        });
+                        tvTimer.setText(String.format("%02d : %02d : %02d", hour, minute, second));
 
                         if (second == 0 ) {
                             minute--;
