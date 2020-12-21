@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -122,6 +123,7 @@ public class FragmentRecipe extends Fragment {
         protected void onPostExecute(String result) {
             Log.d("goeun", result);
             adapter.setList(recipeList);
+            if (recipeList.size() ==  0) Toast.makeText(getContext(), "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show();
             progressDlg.dismiss();
         }
     }
