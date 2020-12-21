@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +37,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -62,7 +66,6 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
     private List<String> placeTypes;
     private PlacesClient placesClient;
     private LatLng currentLoc;
-
     public FragmentStore() {}
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -116,12 +119,13 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 String placeId = marker.getTag().toString();
-                List<Place.Field> placeFields  = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.PHONE_NUMBER, Place.Field.ADDRESS);
+                List<Place.Field> placeFields  = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.PHONE_NUMBER, Place.Field.ADDRESS, Place.Field.PHOTO_METADATAS);
                 FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
                 placesClient.fetchPlace(request).addOnSuccessListener(new OnSuccessListener<FetchPlaceResponse>() {
                     @Override
                     public void onSuccess(FetchPlaceResponse response) {
                         Place place = response.getPlace();
+
                         openPlaceDetail(place);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -138,20 +142,48 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    private void getPlaceDetail(String placeId) {
-
-    }
-
-    private void openPlaceDetail(Place place) {
+    private void openPlaceDetail(Place place ) {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_place_detail);
         TextView tvPlaceName = dialog.findViewById(R.id.tvPlaceName);
         TextView tvPlacePhoneNumber = dialog.findViewById(R.id.tvPlacePhoneNumber);
         TextView tvPlaceAddr = dialog.findViewById(R.id.tvPlaceAddr);
+        ImageView ivPlaceImg = dialog.findViewById(R.id.ivPlaceImg);
         tvPlaceName.setText(place.getName());
         if (place.getPhoneNumber() != null) tvPlacePhoneNumber.setText(place.getPhoneNumber());
         tvPlaceAddr.setText(place.getAddress());
         dialog.show();
+
+        final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+        if (metadata == null || metadata.isEmpty()) {
+            Log.w("goeun", "No photo metadata.");
+            return;
+        }
+        final PhotoMetadata photoMetadata = metadata.get(0);
+
+        // Create a FetchPhotoRequest.
+        final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                .setMaxWidth(500) // Optional.
+                .setMaxHeight(300) // Optional.
+                .build();
+        placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+            Bitmap bitmap = fetchPhotoResponse.getBitmap();
+            ivPlaceImg.setImageBitmap(bitmap);
+        }).addOnFailureListener((exception) -> {
+            if (exception instanceof ApiException) {
+                final ApiException apiException = (ApiException) exception;
+
+                final int statusCode = apiException.getStatusCode();
+                Log.e("goeun", "Place not found: " + exception.getMessage() + statusCode);
+            }
+        });
+    }
+
+    private boolean isInSuper(String[] types) {
+        for (String t : types) {
+            if (t.equals("supermarket") || t.equals("convenience_store")) return true;
+        }
+        return false;
     }
 
     PlacesListener placesListener = new PlacesListener() {
@@ -161,14 +193,16 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
                 @Override
                 public void run() {
                     for (noman.googleplaces.Place place : places) {
-                        markerOptions.title(place.getName());
-                        markerOptions.snippet(place.getTypes()[0]);
-                        markerOptions.position(new LatLng(place.getLatitude(), place.getLongitude()));
-                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_RED
-                        ));
-                        Marker newMarker = mGoogleMap.addMarker(markerOptions);
-                        newMarker.setTag(place.getPlaceId());
+                        if (isInSuper(place.getTypes())) {
+                            markerOptions.title(place.getName());
+                            markerOptions.snippet(place.getTypes()[0]);
+                            markerOptions.position(new LatLng(place.getLatitude(), place.getLongitude()));
+                            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(
+                                    BitmapDescriptorFactory.HUE_RED
+                            ));
+                            Marker newMarker = mGoogleMap.addMarker(markerOptions);
+                            newMarker.setTag(place.getPlaceId());
+                        }
                     }
                 }
             });
@@ -189,7 +223,7 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
             new NRPlaces.Builder().listener(placesListener)
                     .key(getString(R.string.map_api_key))
                     .latlng(location.getLatitude(), location.getLongitude())
-                    .radius(300)
+                    .radius(500)
                     .type(type)
                     .build()
                     .execute();
