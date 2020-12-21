@@ -49,11 +49,11 @@ public class AreaXmlParser {
                                         resultList.add(area);
                                     }
                                     area = new Area();
-                                    area.setCode(Integer.parseInt(text));
+                                    area.setCode(text);
                                 }
                                 else {
                                     detailArea = new Area();
-                                    detailArea.setCode(Integer.parseInt(text));
+                                    detailArea.setCode(text);
                                 }
                                 break;
                             case NAME:

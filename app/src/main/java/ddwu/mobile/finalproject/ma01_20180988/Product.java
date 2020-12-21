@@ -1,5 +1,8 @@
 package ddwu.mobile.finalproject.ma01_20180988;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Product {
     private static final String TAG = "Product";
 
@@ -7,8 +10,10 @@ public class Product {
     private String name;
     private int goodId;
     private String detail;
+    private List<Store> storeList;
 
     public Product() {
+        storeList = new ArrayList<>();
     }
 
     public int get_id() {
@@ -41,5 +46,13 @@ public class Product {
 
     public void setDetail(String detail) {
         this.detail = detail;
+    }
+
+    public List<Store> getStoreList() {
+        return storeList;
+    }
+
+    public void setStoreList(List<Store> storeList) {
+        this.storeList = storeList;
     }
 }

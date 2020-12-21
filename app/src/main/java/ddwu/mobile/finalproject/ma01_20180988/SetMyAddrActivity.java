@@ -43,7 +43,7 @@ public class SetMyAddrActivity extends AppCompatActivity {
         areaAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, areaList);
         lvArea.setAdapter(areaAdapter);
 
-        apiAddress = getResources().getString(R.string.area_api_url);
+        apiAddress = getResources().getString(R.string.std_info_api_url);
         apiKey = getResources().getString(R.string.product_api_key);
 
         new NetworkAsyncTask().execute(apiAddress + "AR&" + apiKey);
@@ -91,7 +91,7 @@ public class SetMyAddrActivity extends AppCompatActivity {
                 SharedPreferences pref = getSharedPreferences("config", 0);
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("areaName", area.getName() + " " + detailArea.getName());
-                editor.putInt("areaCode", detailArea.getCode());
+                editor.putString("areaCode", detailArea.getCode());
                 editor.commit();
                 break;
         }

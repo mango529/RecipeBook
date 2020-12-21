@@ -4,9 +4,9 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.CursorWindow;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
@@ -37,8 +38,14 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 
-import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 
 public class FragmentStore extends Fragment implements OnMapReadyCallback {
     final static int PERMISSION_REQ_CODE = 100;
@@ -46,6 +53,7 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
     private View view;
     private SearchView svStore;
     private MapView mapView;
+    private ConstraintLayout clSelGood;
     private TextView tvSelGoodName, tvSelGoodDetail;
     private GoogleMap mGoogleMap;
     private LocationManager locationManager;
@@ -53,20 +61,42 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
     private Cursor cursor;
     private LocationRequest locationRequest;
     private NetworkManager networkManager;
+    private StoreInfoXmlParser storeInfoParser;
+    private ProductPriceXmlParser productPriceParser;
+    private String apiAddress, apiKey;
+    private String areaCode;
+    private List<Store> storeList;
+    private Product selProduct;
 
     public FragmentStore() {}
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_store, container, false);
 
+        networkManager = new NetworkManager(getContext());
+        apiKey = getString(R.string.product_api_key);
+        selProduct = new Product();
+
+        SharedPreferences pref = getActivity().getSharedPreferences("config", 0);
+        areaCode = pref.getString("areaCode", null);
+        if (areaCode == null) {
+            Toast.makeText(getContext(), "MyPage에서 나의 지역을 먼저 설정해주세요!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+//            storeList = new ArrayList<>();
+//            parser = new StoreInfoXmlParser();
+//            apiAddress = getString(R.string.store_info_api_url);
+//            new NetworkAsyncTask().execute(apiAddress + apiKey);
+        }
+
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         svStore = view.findViewById(R.id.svStore);
         tvSelGoodName = view.findViewById(R.id.tvSelGoodName);
         tvSelGoodDetail = view.findViewById(R.id.tvSelGoodDetail);
+        clSelGood = view.findViewById(R.id.clSelGood);
 
         cursorAdapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_list_item_1, null,
                 new String[] {"name"}, new int[] {android.R.id.text1}, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-
         SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
         svStore.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         svStore.setIconifiedByDefault(false);
@@ -82,7 +112,6 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
         svStore.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
                 return false;
             }
 
@@ -91,7 +120,7 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
                 ProductDBHelper productDBHelper = new ProductDBHelper(getContext());
                 SQLiteDatabase db = productDBHelper.getReadableDatabase();
                 cursor = db.rawQuery("select _id, name, detail, goodId from " + productDBHelper.TABLE_NAME + " where name like '%" + newText + "%';", null);
-                cursorAdapter.changeCursor(cursor);
+                cursorAdapter.swapCursor(cursor);
                 return false;
             }
         });
@@ -104,7 +133,16 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
 
             @Override
             public boolean onSuggestionClick(int position) {
+                clSelGood.setVisibility(View.VISIBLE);
                 Cursor c = (Cursor) cursorAdapter.getItem(position);
+
+                String inspectDay = findInspectDay();
+                String goodId = c.getString(c.getColumnIndex(ProductDBHelper.COL_GOOD_ID));
+
+                productPriceParser = new ProductPriceXmlParser();
+                apiAddress = getString(R.string.product_price_api_url);
+                new NetworkAsyncTask().execute(apiAddress + "goodInspectDay=" + inspectDay + "&goodId=" + goodId + "&" + apiKey);
+
                 tvSelGoodName.setText(c.getString(c.getColumnIndex(ProductDBHelper.COL_NAME)));
                 if (c.getString(c.getColumnIndex(ProductDBHelper.COL_DETAIL)) != null) {
                     tvSelGoodDetail.setVisibility(View.VISIBLE);
@@ -115,6 +153,27 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
         });
 
         return view;
+    }
+
+    private String findInspectDay() {
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int date = cal.get(Calendar.DATE);
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+
+        System.out.println("입력된 날짜 : " + cal.getTime());
+        if (dayOfWeek == 7) {
+            cal.set(Calendar.DAY_OF_WEEK,Calendar.FRIDAY);
+            System.out.println("입력된 날짜의 일요일  : " + cal.getTime());
+        }
+        else {
+            cal.add(Calendar.DATE, -7);
+            cal.set(Calendar.DAY_OF_WEEK,Calendar.FRIDAY);
+            System.out.println("입력된 날짜의 이전주의 일요일 : " + cal.getTime());
+        }
+        SimpleDateFormat fm = new SimpleDateFormat("yyyyMMdd");
+        return fm.format(cal.getTime());
     }
 
     @Override
@@ -133,7 +192,7 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
-        mGoogleMap.setPadding (0, 200, 0, 0);
+        mGoogleMap.setPadding(0, 200, 0, 0);
 
         locationUpdate();
 
@@ -206,14 +265,18 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
             result = networkManager.downloadContents(address);
             if (result == null) return "Error";
 
-            //recipeList = parser.parse(result);
+            //storeList = parser.parse(result, areaCode);
+            selProduct.getStoreList().addAll(productPriceParser.parse(result));
+
             return result;
         }
 
         @Override
         protected void onPostExecute(String result) {
-            Log.d("goeun", result);
             //adapter.setList(recipeList);
+            Log.d("goeun", result);
+            //Log.d("goeun", "store 개수: " + storeList.size());
+            Log.d("goeun", "굿즈 판매 정보 개수: " + selProduct.getStoreList().size());
             progressDlg.dismiss();
         }
     }

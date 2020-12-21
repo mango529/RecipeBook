@@ -99,8 +99,8 @@ public class NetworkManager {
     }
 
     private InputStream getNetworkConnection(HttpURLConnection conn) throws Exception {
-        conn.setReadTimeout(10000);
-        conn.setConnectTimeout(10000);
+        conn.setReadTimeout(50000);
+        conn.setConnectTimeout(50000);
         conn.setRequestMethod("GET");
         conn.setDoInput(true);
         conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
