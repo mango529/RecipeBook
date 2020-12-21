@@ -8,11 +8,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="map_api_key">AIzaSyDL7AoGsHEdWhWmPWuxKAD8iNTGSW-XKPQ</string>
     <string name="recipe_api_url">http://openapi.foodsafetykorea.go.kr/api/211a173951424c709419/COOKRCP01/xml/1/1000/RCP_NM=</string>
-    <string name="product_api_key">ServiceKey=M0jX%2F%2F%2FCp8vi8BDBNxGbDfWMN%2B2IFoRsSVcIC1W4kxLDLiix6XQ%2Bst0RAyEMomH9bg3mzamcMKWeJPYc4y7SMw%3D%3D</string>
-    <string name="goodId_api_url">http://openapi.price.go.kr/openApiImpl/ProductPriceInfoService/getProductInfoSvc.do?</string>
-    <string name="std_info_api_url">http://openapi.price.go.kr/openApiImpl/ProductPriceInfoService/getStandardInfoSvc.do?classCode=</string>
-    <string name="store_info_api_url">http://openapi.price.go.kr/openApiImpl/ProductPriceInfoService/getStoreInfoSvc.do?</string>
-    <string name="product_price_api_url">http://openapi.price.go.kr/openApiImpl/ProductPriceInfoService/getProductPriceInfoSvc.do?</string>
     <string name="channel_name">Timer</string>
     <string name="channel_description">Timer</string>
     <string name="CHANNEL_ID">MY_CHANNEL</string>
