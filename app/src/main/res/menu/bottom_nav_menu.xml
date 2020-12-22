@@ -2,6 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" />
+    <item
+        android:id="@+id/navigation_recipe"
+        android:icon="@drawable/ic_frying_egg_24"
+        android:title="@string/title_recipe" />
+    <item
         android:id="@+id/navigation_store"
         android:icon="@drawable/ic_baseline_storefront_24"
         android:title="@string/title_store" />
@@ -9,19 +17,5 @@
         android:id="@+id/navigation_timer"
         android:icon="@drawable/ic_baseline_timer_24"
         android:title="@string/title_timer" />
-    <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_home" />
-
-    <item
-        android:id="@+id/navigation_recipe"
-        android:icon="@drawable/ic_frying_egg_24"
-        android:title="@string/title_recipe" />
-
-    <item
-        android:id="@+id/navigation_my_page"
-        android:icon="@drawable/ic_baseline_person_24"
-        android:title="@string/title_myPage" />
 
 </menu>

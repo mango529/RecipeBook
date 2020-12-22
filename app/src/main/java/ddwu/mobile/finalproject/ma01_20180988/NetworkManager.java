@@ -25,7 +25,7 @@ public class NetworkManager {
 
     public String downloadContents(String address) {
         HttpURLConnection conn = null;
-        InputStream stream = null;
+        InputStream stream;
         String result = null;
 
         if (!isOnline()) return null;
@@ -47,7 +47,7 @@ public class NetworkManager {
 
     public Bitmap downloadImage(String address) {
         HttpURLConnection conn = null;
-        InputStream stream = null;
+        InputStream stream;
         Bitmap result = null;
 
         try {
@@ -99,8 +99,8 @@ public class NetworkManager {
     }
 
     private InputStream getNetworkConnection(HttpURLConnection conn) throws Exception {
-        conn.setReadTimeout(50000);
-        conn.setConnectTimeout(50000);
+        conn.setReadTimeout(10000);
+        conn.setConnectTimeout(10000);
         conn.setRequestMethod("GET");
         conn.setDoInput(true);
         conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");

@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager;
 
 public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager = getSupportFragmentManager();
-    private Fragment fragmentHome, fragmentRecipe, fragmentStore, fragmentMyPage, fragmentTimer;
+    private Fragment fragmentHome, fragmentRecipe, fragmentStore, fragmentTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragmentHome).commit();
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        navView.setSelectedItemId(R.id.navigation_home);
+       // navView.setSelectedItemId(R.id.navigation_home);
         navView.setOnNavigationItemSelectedListener(new ItemSelectedListener());
 
         String str = getIntent().getStringExtra("notiTimer");
@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
                 if (fragmentStore != null)  fragmentManager.beginTransaction().hide(fragmentStore).commit();
-                if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
                 if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
                 if (fragmentTimer != null)  fragmentManager.beginTransaction().show(fragmentTimer).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
 
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
                     if (fragmentHome != null)  fragmentManager.beginTransaction().show(fragmentHome).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
                     if (fragmentStore != null)  fragmentManager.beginTransaction().hide(fragmentStore).commit();
-                    if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
                     if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
                     if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
                     break;
@@ -73,25 +71,12 @@ public class MainActivity extends AppCompatActivity {
 
                     if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
                     if (fragmentStore != null) fragmentManager.beginTransaction().hide(fragmentStore).commit();
-                    if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
                     if (fragmentRecipe != null)  fragmentManager.beginTransaction().show(fragmentRecipe).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
                     if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
                     break;
                 case R.id.navigation_store:
                     fragmentStore = new FragmentStore();
                     fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentStore).commit();
-                    break;
-                case R.id.navigation_my_page:
-                    if (fragmentMyPage == null) {
-                        fragmentMyPage = new FragmentMyPage();
-                        fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentMyPage).commit();
-                    }
-
-                    if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
-                    if (fragmentStore != null)  fragmentManager.beginTransaction().hide(fragmentStore).commit();
-                    if (fragmentMyPage != null)  fragmentManager.beginTransaction().show(fragmentMyPage).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
-                    if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
-                    if (fragmentTimer != null)  fragmentManager.beginTransaction().hide(fragmentTimer).commit();
                     break;
                 case R.id.navigation_timer:
                     if (fragmentTimer == null) {
@@ -101,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
                     if (fragmentHome != null)  fragmentManager.beginTransaction().hide(fragmentHome).commit();
                     if (fragmentStore != null)  fragmentManager.beginTransaction().hide(fragmentStore).commit();
-                    if (fragmentMyPage != null)  fragmentManager.beginTransaction().hide(fragmentMyPage).commit();
                     if (fragmentRecipe != null)  fragmentManager.beginTransaction().hide(fragmentRecipe).commit();
                     if (fragmentTimer != null)  fragmentManager.beginTransaction().show(fragmentTimer).setCustomAnimations(R.anim.fade_in, R.anim.fade_out).commit();
                     break;

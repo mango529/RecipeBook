@@ -11,14 +11,17 @@ public class RecipeDBHelper extends SQLiteOpenHelper {
     public final static String R_TABLE_NAME = "recipe_table";
     public final static String R_COL_ID = "recipe_id";
     public final static String COL_NAME = "name";
-    public final static String COL_TYPE = "type";
-    public final static String COL_CAL = "cal";
     public final static String COL_IMAGELINK = "imagelink";
-    public final static String COL_INGRE = "ingredient";
+    public final static String COL_MEMO = "memo";
+    public final static String COL_HASHTAG = "hashtag";
+    public final static String COL_DATE = "date";
+    public final static String COL_RATING = "rating";
     public final static String M_TABLE_NAME = "manual_table";
     public final static String M_COL_ID = "manual_id";
     public final static String COL_STEP = "step";
     public final static String COL_CONTENT = "content";
+    public final static String I_TABLE_NAME = "ingredient_table";
+
 
     public RecipeDBHelper(Context context) {
         super(context, DB_NAME, null, 1);
@@ -26,9 +29,8 @@ public class RecipeDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = "CREATE TABLE " + R_TABLE_NAME + " (" + R_COL_ID + " integer primary key autoincrement, " +
-                COL_NAME + " TEXT, " + COL_TYPE + " TEXT, " + COL_CAL + " integer, " + COL_IMAGELINK + " TEXT, " +
-                COL_INGRE + " TEXT)";
+        String sql = "CREATE TABLE " + R_TABLE_NAME + " (" + R_COL_ID + " integer primary key autoincrement, " + COL_NAME + " TEXT, "
+                + COL_MEMO + " TEXT, " + COL_HASHTAG + " TEXT, " + COL_DATE + " TEXT, " + COL_RATING + " integer, " + COL_IMAGELINK + " TEXT)";
         Log.d(TAG, sql);
         db.execSQL(sql);
         sql = "CREATE TABLE " + M_TABLE_NAME + " (" + M_COL_ID + " integer primary key autoincrement, " + R_COL_ID + " integer, " +
@@ -49,7 +51,6 @@ public class RecipeDBHelper extends SQLiteOpenHelper {
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
         if (!db.isReadOnly()) {
-            // Enable foreign key constraints
             db.execSQL("PRAGMA foreign_keys=ON;");
         }
     }

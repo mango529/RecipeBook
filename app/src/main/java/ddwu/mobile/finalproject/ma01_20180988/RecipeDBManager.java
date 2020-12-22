@@ -17,8 +17,6 @@ public class RecipeDBManager {
         SQLiteDatabase db = recipeDBHelper.getWritableDatabase();
         ContentValues value = new ContentValues();
         value.put(recipeDBHelper.COL_NAME, newRecipe.getName());
-        value.put(recipeDBHelper.COL_TYPE, newRecipe.getType());
-        value.put(recipeDBHelper.COL_CAL, newRecipe.getCal());
         value.put(recipeDBHelper.COL_IMAGELINK, newRecipe.getImageLink());
         //value.put(recipeDBHelper.COL_INGRE, newRecipe.getIngredient());
 

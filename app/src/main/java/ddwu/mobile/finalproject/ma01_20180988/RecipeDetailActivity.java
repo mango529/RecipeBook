@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -56,6 +57,16 @@ public class RecipeDetailActivity extends AppCompatActivity {
         } else {
             new GetImageAsyncTask().execute(recipe.getImageLink());
             Log.d(TAG, "Image loading from network");
+        }
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnAddRecipe:
+
+                break;
+            case R.id.btnCloseDetail:
+                break;
         }
     }
 
