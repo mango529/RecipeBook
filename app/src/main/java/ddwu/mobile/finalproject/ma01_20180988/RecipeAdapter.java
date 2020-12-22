@@ -17,8 +17,8 @@ public class RecipeAdapter extends BaseAdapter {
     private Context context;
     private int layout;
     private ArrayList<Recipe> list;
-    private NetworkManager networkManager = null;
-    private ImageFileManager imageFileManager = null;
+    private NetworkManager networkManager;
+    private ImageFileManager imageFileManager;
 
     public RecipeAdapter(Context context, int resource, ArrayList<Recipe> list) {
         this.context = context;

@@ -22,7 +22,6 @@ public class RecipeDBManager {
         value.put(RecipeDBHelper.COL_HASHTAG, newRecipe.getHashtag());
         value.put(RecipeDBHelper.COL_DATE, newRecipe.getDate());
         value.put(RecipeDBHelper.COL_RATING, newRecipe.getRating());
-        value.put(RecipeDBHelper.COL_IMAGELINK, newRecipe.getImageLink());
 
         int id = (int) db.insert(RecipeDBHelper.R_TABLE_NAME, null, value);
 

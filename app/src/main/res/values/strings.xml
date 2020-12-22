@@ -8,6 +8,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="map_api_key">AIzaSyDL7AoGsHEdWhWmPWuxKAD8iNTGSW-XKPQ</string>
     <string name="recipe_api_url">http://openapi.foodsafetykorea.go.kr/api/211a173951424c709419/COOKRCP01/xml/1/1000/RCP_NM=</string>
+    <string name="recommend_recipe_api_url">http://openapi.foodsafetykorea.go.kr/api/211a173951424c709419/COOKRCP01/xml/</string>
     <string name="channel_name">Timer</string>
     <string name="channel_description">Timer</string>
     <string name="CHANNEL_ID">MY_CHANNEL</string>
