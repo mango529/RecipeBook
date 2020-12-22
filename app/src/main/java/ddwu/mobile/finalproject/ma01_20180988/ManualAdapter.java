@@ -25,14 +25,12 @@ public class ManualAdapter extends PagerAdapter {
     private ArrayList<Manual> manuals;
     private Context context;
     private NetworkManager networkManager;
-    private ImageFileManager imageFileManager;
     private TextView tvDetailManual;
     private ImageView ivDetailManualImg;
 
     public ManualAdapter(Context context, ArrayList<Manual> manuals) {
         this.manuals = manuals;
         this.context = context;
-        imageFileManager = new ImageFileManager(context);
         networkManager = new NetworkManager(context);
     }
 

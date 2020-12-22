@@ -27,7 +27,6 @@ public class FragmentRecipe extends Fragment {
     SearchView svRecipe;
     ListView lvSearchRecipe;
     ArrayList<Recipe> recipeList;
-    ImageFileManager imgFileManager;
     RecipeAdapter adapter;
     String apiAddress;
     RecipeXmlParser parser;
@@ -46,8 +45,6 @@ public class FragmentRecipe extends Fragment {
         apiAddress = getResources().getString(R.string.recipe_api_url);
         parser = new RecipeXmlParser();
         networkManager = new NetworkManager(getContext());
-
-        imgFileManager = new ImageFileManager(getContext());
 
         svRecipe.setQueryHint("요리 이름을 입력하세요.");
         int id = svRecipe.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
@@ -92,7 +89,6 @@ public class FragmentRecipe extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        imgFileManager.clearTemporaryFiles();
     }
 
     class NetworkAsyncTask extends AsyncTask<String, Void, String> {

@@ -18,15 +18,11 @@ public class RecipeAdapter extends BaseAdapter {
     private int layout;
     private ArrayList<Recipe> list;
     private NetworkManager networkManager;
-    private ImageFileManager imageFileManager;
-    private boolean isMyRecipe;
 
     public RecipeAdapter(Context context, int resource, ArrayList<Recipe> list) {
         this.context = context;
         this.layout = resource;
         this.list = list;
-        this.isMyRecipe = isMyRecipe;
-        imageFileManager = new ImageFileManager(context);
         networkManager = new NetworkManager(context);
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -75,13 +71,7 @@ public class RecipeAdapter extends BaseAdapter {
             return view;
         }
 
-        Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(dto.getImageLink());
-
-        if (savedBitmap != null) {
-            viewHolder.ivRcpImg.setImageBitmap(savedBitmap);
-        } else {
-            new GetImageAsyncTask(viewHolder).execute(dto.getImageLink());
-        }
+        new GetImageAsyncTask(viewHolder).execute(dto.getImageLink());
 
         return view;
     }
@@ -118,7 +108,6 @@ public class RecipeAdapter extends BaseAdapter {
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
                 viewHolder.ivRcpImg.setImageBitmap(bitmap);
-                imageFileManager.saveBitmapToTemporary(bitmap, imageAddress);
             }
         }
     }

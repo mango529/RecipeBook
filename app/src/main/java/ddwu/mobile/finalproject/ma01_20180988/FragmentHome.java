@@ -11,20 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class FragmentHome extends Fragment {
     private NetworkManager networkManager;
-    private ImageFileManager imageFileManager;
     private RecipeXmlParser parser;
     private Recipe recipe;
 
@@ -36,7 +31,6 @@ public class FragmentHome extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         networkManager = new NetworkManager(getContext());
-        imageFileManager = new ImageFileManager(getContext());
         parser = new RecipeXmlParser();
 
         tvRecommRCP = view.findViewById(R.id.tvRecommRCP);
@@ -110,13 +104,7 @@ public class FragmentHome extends Fragment {
             Log.d("goeun", result);
             tvRecommRCP.setText(recipe.getName());
 
-            Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(recipe.getImageLink());
-
-            if (savedBitmap != null) {
-                ivRecommRCP.setImageBitmap(savedBitmap);
-            } else {
-                new GetImageAsyncTask().execute(recipe.getImageLink());
-            }
+            new GetImageAsyncTask().execute(recipe.getImageLink());
 
             progressDlg.dismiss();
         }
@@ -142,7 +130,6 @@ public class FragmentHome extends Fragment {
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
                 ivRecommRCP.setImageBitmap(bitmap);
-                imageFileManager.saveBitmapToTemporary(bitmap, imageAddress);
             }
         }
     }

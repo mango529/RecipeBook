@@ -7,6 +7,34 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/tvDetailStep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/notosanskr_regular"
+        android:includeFontPadding="false"
+        android:text="1"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/lvDetailIngre" />
+
+    <TextView
+        android:id="@+id/tvNewStep4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/notosanskr_regular"
+        android:includeFontPadding="false"
+        android:text="단계"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/tvDetailStep"
+        app:layout_constraintTop_toBottomOf="@+id/lvDetailIngre" />
+
+    <TextView
         android:id="@+id/tvDetailRcpName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -55,10 +83,11 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:fontFamily="@font/rubik_semibold"
+        android:fontFamily="@font/notosanskr_regular"
         android:includeFontPadding="false"
         android:text="재료"
         android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDetailRcpName" />
 
@@ -69,10 +98,11 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:fontFamily="@font/rubik_semibold"
+        android:fontFamily="@font/notosanskr_regular"
         android:includeFontPadding="false"
         android:text="방법"
         android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lvDetailIngre" />
 

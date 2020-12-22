@@ -25,13 +25,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private static final String TAG = "RecipeDetailActivity";
 
     ImageView ivDetailRcpImg;
-    TextView tvDetailRcpName;
+    TextView tvDetailRcpName, tvDetailStep;
     ListView lvDetailIngre;
     ViewPager vpManual;
 
     ArrayAdapter ingredientAdapter;
     ManualAdapter manualAdapter;
-    ImageFileManager imageFileManager;
     NetworkManager networkManager;
     Recipe recipe;
 
@@ -46,15 +45,29 @@ public class RecipeDetailActivity extends AppCompatActivity {
         tvDetailRcpName = findViewById(R.id.tvDetailRcpName);
         lvDetailIngre = findViewById(R.id.lvDetailIngre);
         vpManual = findViewById(R.id.vpManual);
+        tvDetailStep = findViewById(R.id.tvDetailStep);
 
         ingredientAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, recipe.getIngredients());
         manualAdapter = new ManualAdapter(this, recipe.getManuals());
-        imageFileManager = new ImageFileManager(this);
         networkManager = new NetworkManager(this);
 
         lvDetailIngre.setAdapter(ingredientAdapter);
         tvDetailRcpName.setText(recipe.getName());
         vpManual.setAdapter(manualAdapter);
+        vpManual.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                tvDetailStep.setText(String.valueOf(recipe.getManuals().get(position).getStep()));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
 
         new GetImageAsyncTask().execute(recipe.getImageLink());
     }

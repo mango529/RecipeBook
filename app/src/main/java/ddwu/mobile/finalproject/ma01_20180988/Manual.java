@@ -11,6 +11,12 @@ public class Manual implements Serializable {
     public Manual() {
     }
 
+    public Manual(int step, String content, String imageLink) {
+        this.step = step;
+        this.content = content;
+        this.imageLink = imageLink;
+    }
+
     public int getStep() {
         return step;
     }

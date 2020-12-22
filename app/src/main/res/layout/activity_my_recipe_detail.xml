@@ -16,6 +16,34 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/tvMyRcpStep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/notosanskr_regular"
+                android:includeFontPadding="false"
+                android:text="1"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/textView6"
+                app:layout_constraintTop_toBottomOf="@+id/lvDetailMyIngre" />
+
+            <TextView
+                android:id="@+id/tvNewStep5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/notosanskr_regular"
+                android:includeFontPadding="false"
+                android:text="단계"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/tvMyRcpStep"
+                app:layout_constraintTop_toBottomOf="@+id/lvDetailMyIngre" />
+
+            <TextView
                 android:id="@+id/tvDetailMyRcpName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -103,7 +131,7 @@
 
             <RatingBar
                 android:id="@+id/rbRating"
-                style="@style/Widget.AppCompat.RatingBar.Small"
+                style="@style/Widget.AppCompat.RatingBar.Indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -116,7 +144,7 @@
                 android:id="@+id/tvMyRcpDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 app:layout_constraintEnd_toEndOf="parent"

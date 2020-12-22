@@ -21,14 +21,13 @@ public class MyRecipeDetailActivity extends AppCompatActivity {
     private static final String TAG = "MyRecipeDetailActivity";
 
     ImageView ivDetailMyRcpImg;
-    TextView tvDetailMyRcpName, tvMyRcpDate, tvMyRcpMemo, tvMyRcpHashtag;
+    TextView tvMyRcpStep, tvDetailMyRcpName, tvMyRcpDate, tvMyRcpMemo, tvMyRcpHashtag;
     ListView lvDetailMyIngre;
     ViewPager vpMyManual;
     RatingBar rbRating;
 
     ArrayAdapter ingredientAdapter;
     ManualAdapter manualAdapter;
-    ImageFileManager imageFileManager;
     NetworkManager networkManager;
     Recipe recipe;
 
@@ -41,6 +40,7 @@ public class MyRecipeDetailActivity extends AppCompatActivity {
 
         ivDetailMyRcpImg = findViewById(R.id.ivDetailMyRcpImg);
         tvDetailMyRcpName = findViewById(R.id.tvDetailMyRcpName);
+        tvMyRcpStep = findViewById(R.id.tvMyRcpStep);
         tvMyRcpDate = findViewById(R.id.tvMyRcpDate);
         tvMyRcpMemo = findViewById(R.id.tvMyRcpMemo);
         tvMyRcpHashtag = findViewById(R.id.tvMyRcpHashtag);
@@ -50,21 +50,28 @@ public class MyRecipeDetailActivity extends AppCompatActivity {
 
         ingredientAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, recipe.getIngredients());
         manualAdapter = new ManualAdapter(this, recipe.getManuals());
-        imageFileManager = new ImageFileManager(this);
         networkManager = new NetworkManager(this);
 
         lvDetailMyIngre.setAdapter(ingredientAdapter);
         vpMyManual.setAdapter(manualAdapter);
+        vpMyManual.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                tvMyRcpStep.setText(String.valueOf(recipe.getManuals().get(position).getStep()));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
 
         tvDetailMyRcpName.setText(recipe.getName());
-        Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(recipe.getImageLink());
-        if (savedBitmap != null) {
-            ivDetailMyRcpImg.setImageBitmap(savedBitmap);
-            Log.d(TAG, "Image loading from file");
-        } else {
-            new GetImageAsyncTask().execute(recipe.getImageLink());
-            Log.d(TAG, "Image loading from network");
-        }
+        new GetImageAsyncTask().execute(recipe.getImageLink());
+
         rbRating.setRating(recipe.getRating());
         if (recipe.getDate() != null) {
             tvMyRcpDate.setText(recipe.getDate());
@@ -87,7 +94,7 @@ public class MyRecipeDetailActivity extends AppCompatActivity {
         @Override
         protected Bitmap doInBackground(String... params) {
             imageAddress = params[0];
-            Bitmap result = null;
+            Bitmap result;
             result = networkManager.downloadImage(imageAddress);
             return result;
         }
@@ -96,7 +103,6 @@ public class MyRecipeDetailActivity extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
                 ivDetailMyRcpImg.setImageBitmap(bitmap);
-                imageFileManager.saveBitmapToTemporary(bitmap, imageAddress);
             }
         }
     }

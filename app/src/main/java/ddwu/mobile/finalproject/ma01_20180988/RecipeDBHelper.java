@@ -30,7 +30,7 @@ public class RecipeDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql = "CREATE TABLE " + R_TABLE_NAME + " (" + R_COL_ID + " integer primary key autoincrement, " + COL_NAME + " TEXT, "
-                + COL_MEMO + " TEXT, " + COL_HASHTAG + " TEXT, " + COL_DATE + " TEXT, " + COL_RATING + " integer, " + COL_IMAGELINK + " TEXT)";
+                + COL_MEMO + " TEXT, " + COL_HASHTAG + " TEXT, " + COL_DATE + " TEXT, " + COL_RATING + " float, " + COL_IMAGELINK + " TEXT)";
         Log.d(TAG, sql);
         db.execSQL(sql);
         sql = "CREATE TABLE " + M_TABLE_NAME + " (" + M_COL_ID + " integer primary key autoincrement, " + R_COL_ID + " integer, " +

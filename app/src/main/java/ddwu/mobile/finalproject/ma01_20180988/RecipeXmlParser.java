@@ -101,6 +101,7 @@ public class RecipeXmlParser {
                                     if (mTemp.charAt(mTemp.length()-1) == 'a'  || mTemp.charAt(mTemp.length()-1) == 'b' || mTemp.charAt(mTemp.length()-1) == 'c' || mTemp.charAt(mTemp.length()-1) == 'd') {
                                         mTemp = mTemp.substring(0, mTemp.length() - 1);
                                     }
+                                    mTemp = mTemp.substring(3);
                                     mTemp = mTemp.replace("\n", "");
                                     mContents.put(conStepNum, mTemp);
                                 }

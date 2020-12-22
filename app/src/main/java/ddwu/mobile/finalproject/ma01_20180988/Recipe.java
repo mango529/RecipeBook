@@ -9,7 +9,7 @@ public class Recipe implements Serializable {
     private String memo;
     private String hashtag;
     private String date;
-    private int rating;
+    private float rating;
     private String imageLink;
     private ArrayList<String>  ingredients;
     private ArrayList<Manual> manuals;
@@ -76,11 +76,11 @@ public class Recipe implements Serializable {
         this.date = date;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 

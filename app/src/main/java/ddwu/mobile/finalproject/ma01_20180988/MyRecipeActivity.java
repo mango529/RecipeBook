@@ -9,6 +9,8 @@ import android.widget.ListView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 public class MyRecipeActivity extends AppCompatActivity {
@@ -17,6 +19,7 @@ public class MyRecipeActivity extends AppCompatActivity {
     private RecipeAdapter recipeAdapter;
     private ArrayList<Recipe> recipeList;
     private RecipeDBManager manager;
+    private FloatingActionButton fabNewRecipe;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,6 +28,7 @@ public class MyRecipeActivity extends AppCompatActivity {
 
         manager = new RecipeDBManager(this);
 
+        fabNewRecipe = findViewById(R.id.fabNewRecipe);
         lvMyRecipe = findViewById(R.id.lvMyRecipe);
         recipeList = manager.getMyRecipe();
         recipeAdapter = new RecipeAdapter(this, R.layout.recipe_adapter_view, recipeList);
@@ -35,6 +39,14 @@ public class MyRecipeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MyRecipeActivity.this, MyRecipeDetailActivity.class);
                 intent.putExtra("recipe", recipeList.get(position));
+                startActivity(intent);
+            }
+        });
+
+        fabNewRecipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MyRecipeActivity.this, NewRecipeActivity.class);
                 startActivity(intent);
             }
         });
