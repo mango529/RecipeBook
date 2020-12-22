@@ -2,6 +2,7 @@ package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,7 @@ public class RecipeAdapter extends BaseAdapter {
     public RecipeAdapter(Context context, int resource, ArrayList<Recipe> list) {
         this.context = context;
         this.layout = resource;
-        this.list = list;
+        this.list = new ArrayList<>();
         networkManager = new NetworkManager(context);
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -71,9 +72,20 @@ public class RecipeAdapter extends BaseAdapter {
             return view;
         }
 
-        new GetImageAsyncTask(viewHolder).execute(dto.getImageLink());
+        if (dto.getImageLink().contains("http"))  {
+            new GetImageAsyncTask(viewHolder).execute(dto.getImageLink());
+        }
+        else {
+            setPic(viewHolder.ivRcpImg, dto.getImageLink());
+        }
 
         return view;
+    }
+
+    private void setPic(ImageView view, String path) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap originalBm = BitmapFactory.decodeFile(path, options);
+        view.setImageBitmap(originalBm);
     }
 
     public void setList(ArrayList<Recipe> list) {

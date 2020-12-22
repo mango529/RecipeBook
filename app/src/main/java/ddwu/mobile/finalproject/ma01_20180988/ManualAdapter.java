@@ -2,6 +2,7 @@ package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,14 +62,30 @@ public class ManualAdapter extends PagerAdapter {
         tvDetailManual = v.findViewById(R.id.tvDetailManual);
 
         tvDetailManual.setText(manuals.get(position).getContent());
-        if (manuals.get(position).getImageLink() != null) {        Log.d(TAG, manuals.get(position).getImageLink());
+        if (manuals.get(position).getImageLink() != null) {
             ivDetailManualImg.setVisibility(View.VISIBLE);
-            ivDetailManualImg.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
-            new GetImageAsyncTask().execute(manuals.get(position).getImageLink());
+            if (manuals.get(position).getImageLink().contains("http"))  {
+                ivDetailManualImg.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
+                new GetImageAsyncTask().execute(manuals.get(position).getImageLink());
+            }
+            else {
+                setPic(ivDetailManualImg, manuals.get(position).getImageLink());
+            }
         }
 
         container.addView(v);
         return v;
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
+    }
+
+    private void setPic(ImageView view, String path) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap originalBm = BitmapFactory.decodeFile(path, options);
+        view.setImageBitmap(originalBm);
     }
 
     class GetImageAsyncTask extends AsyncTask<String, Void, Bitmap> {

@@ -1,6 +1,7 @@
 package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -70,6 +71,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
         });
 
         new GetImageAsyncTask().execute(recipe.getImageLink());
+    }
+
+    private void setPic(ImageView view, String path) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap originalBm = BitmapFactory.decodeFile(path, options);
+        view.setImageBitmap(originalBm);
     }
 
     @Override

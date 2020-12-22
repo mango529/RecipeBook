@@ -27,10 +27,9 @@ public class MyRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_recipe);
 
         manager = new RecipeDBManager(this);
-
+        recipeList = new ArrayList<>();
         fabNewRecipe = findViewById(R.id.fabNewRecipe);
         lvMyRecipe = findViewById(R.id.lvMyRecipe);
-        recipeList = manager.getMyRecipe();
         recipeAdapter = new RecipeAdapter(this, R.layout.recipe_adapter_view, recipeList);
         lvMyRecipe.setAdapter(recipeAdapter);
 
@@ -50,5 +49,13 @@ public class MyRecipeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        recipeList.clear();
+        recipeList.addAll(manager.getMyRecipe());
+        recipeAdapter.setList(recipeList);
     }
 }

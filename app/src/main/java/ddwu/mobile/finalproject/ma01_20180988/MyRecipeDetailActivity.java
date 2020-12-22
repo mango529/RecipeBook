@@ -1,6 +1,7 @@
 package ddwu.mobile.finalproject.ma01_20180988;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -70,7 +71,12 @@ public class MyRecipeDetailActivity extends AppCompatActivity {
         });
 
         tvDetailMyRcpName.setText(recipe.getName());
-        new GetImageAsyncTask().execute(recipe.getImageLink());
+        if (recipe.getImageLink().contains("http"))  {
+            new GetImageAsyncTask().execute(recipe.getImageLink());
+        }
+        else {
+            setPic(ivDetailMyRcpImg, recipe.getImageLink());
+        }
 
         rbRating.setRating(recipe.getRating());
         if (recipe.getDate() != null) {
@@ -83,6 +89,12 @@ public class MyRecipeDetailActivity extends AppCompatActivity {
             tvMyRcpHashtag.setVisibility(View.VISIBLE);
             tvMyRcpHashtag.setText("#" + recipe.getHashtag());
         }
+    }
+
+    private void setPic(ImageView view, String path) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap originalBm = BitmapFactory.decodeFile(path, options);
+        view.setImageBitmap(originalBm);
     }
 
     class GetImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
