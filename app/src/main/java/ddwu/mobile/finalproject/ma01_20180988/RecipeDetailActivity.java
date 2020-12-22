@@ -4,12 +4,15 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -26,13 +29,14 @@ public class RecipeDetailActivity extends AppCompatActivity {
     ManualAdapter manualAdapter;
     ImageFileManager imageFileManager;
     NetworkManager networkManager;
+    Recipe recipe;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
-        Recipe recipe = (Recipe) getIntent().getSerializableExtra("recipe");
+        recipe = (Recipe) getIntent().getSerializableExtra("recipe");
 
         ivDetailRcpImg = findViewById(R.id.ivDetailRcpImg);
         tvDetailRcpName = findViewById(R.id.tvDetailRcpName);
@@ -59,14 +63,17 @@ public class RecipeDetailActivity extends AppCompatActivity {
         }
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnAddRecipe:
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.recipe_detail_menu, menu);
+        return true;
+    }
 
-                break;
-            case R.id.btnCloseDetail:
-                break;
-        }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        RecipeDBManager manager = new RecipeDBManager(this);
+        manager.addNewRecipe(recipe);
+        return true;
     }
 
     class GetImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
