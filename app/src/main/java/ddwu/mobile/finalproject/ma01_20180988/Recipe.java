@@ -7,17 +7,18 @@ import java.util.HashMap;
 public class Recipe implements Serializable {
     private int recipe_id;
     private String name;
-    private String type;
-    private int cal;
+    private String memo;
+    private String hashtag;
+    private String date;
+    private int rating;
     private String imageLink;
     private ArrayList<String>  ingredients;
-    private ArrayList<String> manuals;
-    private HashMap<Integer, String> mImageLinks;
+    private ArrayList<Manual> manuals;
+    private String type;
 
     public Recipe() {
         ingredients = new ArrayList<>();
         manuals = new ArrayList<>();
-        mImageLinks = new HashMap<>();
     }
 
     public int getRecipe_id() {
@@ -36,22 +37,6 @@ public class Recipe implements Serializable {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public int getCal() {
-        return cal;
-    }
-
-    public void setCal(int cal) {
-        this.cal = cal;
-    }
-
     public String getImageLink() {
         return imageLink;
     }
@@ -68,19 +53,51 @@ public class Recipe implements Serializable {
         this.ingredients = ingredients;
     }
 
-    public ArrayList<String> getManuals() {
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public String getHashtag() {
+        return hashtag;
+    }
+
+    public void setHashtag(String hashtag) {
+        this.hashtag = hashtag;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public ArrayList<Manual> getManuals() {
         return manuals;
     }
 
-    public void setManuals(ArrayList<String> manuals) {
+    public void setManuals(ArrayList<Manual> manuals) {
         this.manuals = manuals;
     }
 
-    public HashMap<Integer, String> getMImageLinks() {
-        return mImageLinks;
+    public String getType() {
+        return type;
     }
 
-    public void setMImageLinks(HashMap<Integer, String> mImageLinks) {
-        this.mImageLinks = mImageLinks;
+    public void setType(String type) {
+        this.type = type;
     }
 }

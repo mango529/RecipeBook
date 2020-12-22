@@ -18,15 +18,13 @@ import java.util.HashMap;
 public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder> {
     private static final String TAG = "ManualAdapter";
 
-    private ArrayList<String> manuals;
-    private HashMap<Integer, String> mImageLinks;
+    private ArrayList<Manual> manuals;
 
     private NetworkManager networkManager;
     private ImageFileManager imageFileManager;
 
-    public ManualAdapter(Context context, ArrayList<String> manuals, HashMap<Integer, String> mImageLinks) {
+    public ManualAdapter(Context context, ArrayList<Manual> manuals) {
         this.manuals = manuals;
-        this.mImageLinks = mImageLinks;
         imageFileManager = new ImageFileManager(context);
         networkManager = new NetworkManager(context);
     }
@@ -40,22 +38,19 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvDetailManual.setText(manuals.get(position));
+        holder.tvDetailManual.setText(manuals.get(position).getContent());
 
-        if (mImageLinks.containsKey(position + 1)) {
-            Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(mImageLinks.get(position + 1));
+        if (manuals.get(position).getImageLink() != null) {
+            holder.ivDetailManualImg.setVisibility(View.VISIBLE);
+            Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(manuals.get(position).getImageLink());
 
             if (savedBitmap != null) {
                 holder.ivDetailManualImg.setImageBitmap(savedBitmap);
             } else {
                 holder.ivDetailManualImg.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
-                new GetImageAsyncTask(holder).execute(mImageLinks.get(position + 1));
+                new GetImageAsyncTask(holder).execute(manuals.get(position).getImageLink());
             }
         }
-        else {
-            holder.ivDetailManualImg.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
-        }
-
     }
 
     @Override

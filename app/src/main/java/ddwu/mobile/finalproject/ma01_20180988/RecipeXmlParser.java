@@ -6,20 +6,20 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class RecipeXmlParser {
-    public enum TagType { NONE, NAME, TYPE, CAL, IMAGE, ING, MANUAL, MANUAL_IMG };
+    public enum TagType { NONE, NAME, TYPE, IMAGE, ING, MANUAL, MANUAL_IMG };
 
     final static String TAG_ROW = "row";
     final static String TAG_NAME = "RCP_NM";
     final static  String TAG_TYPE = "RCP_PAT2";
-    final static  String TAG_CAL = "INFO_ENG";
     final static  String TAG_IMAGE = "ATT_FILE_NO_MAIN";
     final static  String TAG_ING = "RCP_PARTS_DTLS";
     final static  String TAG_MANUAL = "MANUAL";
     final static  String TAG_MANUAL_IMG = "MANUAL_IMG";
-    int stepNum;
+    int imageStepNum, conStepNum;
 
     public RecipeXmlParser() {
     }
@@ -27,6 +27,8 @@ public class RecipeXmlParser {
     public ArrayList<Recipe> parse(String xml) {
         ArrayList<Recipe> resultList = new ArrayList<>();
         Recipe dto = null;
+        HashMap<Integer, String> mContents = new HashMap<>();
+        HashMap<Integer, String> mImageLinks = new HashMap<>();
 
         TagType tagType = TagType.NONE;
 
@@ -49,23 +51,34 @@ public class RecipeXmlParser {
                             if (dto != null) tagType = TagType.NAME;
                         } else if (parser.getName().equals(TAG_TYPE)) {
                             if (dto != null) tagType = TagType.TYPE;
-                        } else if (parser.getName().equals(TAG_CAL)) {
-                            if (dto != null) tagType = TagType.CAL;
                         } else if (parser.getName().equals(TAG_IMAGE)) {
                             if (dto != null) tagType = TagType.IMAGE;
                         } else if (parser.getName().equals(TAG_ING)) {
                             if (dto != null) tagType = TagType.ING;
                         } else if (parser.getName().contains(TAG_MANUAL_IMG)) {
                             if (dto != null) tagType = TagType.MANUAL_IMG;
-                            stepNum = Integer.parseInt(parser.getName().substring(10));
+                            imageStepNum = Integer.parseInt(parser.getName().substring(10));
                         } else if (parser.getName().contains(TAG_MANUAL)) {
                             if (dto != null) tagType = TagType.MANUAL;
+                            conStepNum = Integer.parseInt(parser.getName().substring(6));
                         }
                         break;
                     case XmlPullParser.END_TAG:
                         if (parser.getName().equals(TAG_ROW)) {
+                            Manual m;
+                            for (int i = 1; i <= mContents.size(); i++) {
+                                m = new Manual();
+                                if (mImageLinks.containsKey(i)) {
+                                    m.setImageLink(mImageLinks.get(i));
+                                }
+                                m.setContent(mContents.get(i));
+                                m.setStep(i);
+                                dto.getManuals().add(m);
+                            }
                             resultList.add(dto);
                             dto = null;
+                            mContents.clear();
+                            mImageLinks.clear();
                         }
                         break;
                     case XmlPullParser.TEXT:
@@ -76,9 +89,6 @@ public class RecipeXmlParser {
                             case TYPE:
                                 dto.setType(parser.getText());
                                 break;
-                            case CAL:
-                                dto.setCal(Integer.parseInt(parser.getText()));
-                                break;
                             case IMAGE:
                                 dto.setImageLink(parser.getText());
                                 break;
@@ -88,15 +98,15 @@ public class RecipeXmlParser {
                             case MANUAL:
                                 String mTemp = parser.getText();
                                 if (mTemp.length() != 5) {
-                                    if (mTemp.charAt(mTemp.length()-1) == 'a'  || mTemp.charAt(mTemp.length()-1) == 'b' || mTemp.charAt(mTemp.length()-1) == 'c') {
+                                    if (mTemp.charAt(mTemp.length()-1) == 'a'  || mTemp.charAt(mTemp.length()-1) == 'b' || mTemp.charAt(mTemp.length()-1) == 'c' || mTemp.charAt(mTemp.length()-1) == 'd') {
                                         mTemp = mTemp.substring(0, mTemp.length() - 1);
                                     }
-                                    dto.getManuals().add(mTemp);
+                                    mContents.put(conStepNum, mTemp);
                                 }
                                 break;
                             case MANUAL_IMG:
                                 if (parser.getText().length() != 5) {
-                                    dto.getMImageLinks().put(stepNum, parser.getText());
+                                    mImageLinks.put(imageStepNum, parser.getText());
                                 }
                                 break;
                         }

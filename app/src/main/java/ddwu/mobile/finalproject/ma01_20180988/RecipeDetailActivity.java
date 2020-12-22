@@ -39,9 +39,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
         lvDetailIngre = findViewById(R.id.lvDetailIngre);
         vpManual = findViewById(R.id.vpManual);
 
-        Log.d("goeun", "사이즈 " + recipe.getIngredients().size());
         ingredientAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, recipe.getIngredients());
-        manualAdapter = new ManualAdapter(this, recipe.getManuals(), recipe.getMImageLinks());
+        manualAdapter = new ManualAdapter(this, recipe.getManuals());
         imageFileManager = new ImageFileManager(this);
         networkManager = new NetworkManager(this);
 

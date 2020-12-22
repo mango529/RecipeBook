@@ -15,6 +15,7 @@
         android:layout_marginRight="2dp"
         android:layout_weight="1"
         android:scaleType="fitCenter"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@drawable/ic_baseline_image_not_supported_24" />

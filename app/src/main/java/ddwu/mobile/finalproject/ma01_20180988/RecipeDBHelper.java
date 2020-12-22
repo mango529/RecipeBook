@@ -21,7 +21,7 @@ public class RecipeDBHelper extends SQLiteOpenHelper {
     public final static String COL_STEP = "step";
     public final static String COL_CONTENT = "content";
     public final static String I_TABLE_NAME = "ingredient_table";
-
+    public final static String I_COL_ID = "ingredient_id";
 
     public RecipeDBHelper(Context context) {
         super(context, DB_NAME, null, 1);
@@ -34,8 +34,12 @@ public class RecipeDBHelper extends SQLiteOpenHelper {
         Log.d(TAG, sql);
         db.execSQL(sql);
         sql = "CREATE TABLE " + M_TABLE_NAME + " (" + M_COL_ID + " integer primary key autoincrement, " + R_COL_ID + " integer, " +
-                COL_STEP + " integer, " + COL_CONTENT + " TEXT, " +  COL_IMAGELINK + " integer, FOREIGN KEY(" + R_COL_ID + ") REFERENCES "
+                COL_STEP + " integer, " + COL_CONTENT + " TEXT, " +  COL_IMAGELINK + " TEXT, FOREIGN KEY(" + R_COL_ID + ") REFERENCES "
                 + R_TABLE_NAME + "(" +  R_COL_ID + ") ON DELETE CASCADE)" ;
+        Log.d(TAG, sql);
+        db.execSQL(sql);
+        sql = "CREATE TABLE " + I_TABLE_NAME + " (" + I_COL_ID + " integer primary key autoincrement, " + R_COL_ID + " integer, " +
+                COL_NAME + " TEXT, FOREIGN KEY(" + R_COL_ID + ") REFERENCES " + R_TABLE_NAME + "(" +  R_COL_ID + ") ON DELETE CASCADE)" ;
         Log.d(TAG, sql);
         db.execSQL(sql);
     }
@@ -44,6 +48,7 @@ public class RecipeDBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + R_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + M_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + I_TABLE_NAME);
         onCreate(db);
     }
 
