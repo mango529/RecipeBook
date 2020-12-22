@@ -7,14 +7,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 public class RecipeDetailActivity extends AppCompatActivity {
@@ -23,7 +27,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     ImageView ivDetailRcpImg;
     TextView tvDetailRcpName;
     ListView lvDetailIngre;
-    ViewPager2 vpManual;
+    ViewPager vpManual;
 
     ArrayAdapter ingredientAdapter;
     ManualAdapter manualAdapter;
@@ -52,15 +56,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         tvDetailRcpName.setText(recipe.getName());
         vpManual.setAdapter(manualAdapter);
 
-        Bitmap savedBitmap = imageFileManager.getBitmapFromTemporary(recipe.getImageLink());
-
-        if (savedBitmap != null) {
-            ivDetailRcpImg.setImageBitmap(savedBitmap);
-            Log.d(TAG, "Image loading from file");
-        } else {
-            new GetImageAsyncTask().execute(recipe.getImageLink());
-            Log.d(TAG, "Image loading from network");
-        }
+        new GetImageAsyncTask().execute(recipe.getImageLink());
     }
 
     @Override
@@ -72,7 +68,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         RecipeDBManager manager = new RecipeDBManager(this);
-        manager.addNewRecipe(recipe);
+        if (manager.addNewRecipe(recipe)) {
+            Toast.makeText(this, "내 레시피에 저장 완료!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(this, "내 레시피에 저장 실패!", Toast.LENGTH_SHORT).show();
+        }
         return true;
     }
 
@@ -86,7 +87,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         @Override
         protected Bitmap doInBackground(String... params) {
             imageAddress = params[0];
-            Bitmap result = null;
+            Bitmap result;
             result = networkManager.downloadImage(imageAddress);
             return result;
         }
@@ -95,7 +96,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
                 ivDetailRcpImg.setImageBitmap(bitmap);
-                imageFileManager.saveBitmapToTemporary(bitmap, imageAddress); // imageAddress로 filename 만듦
             }
         }
     }

@@ -2,7 +2,6 @@ package ddwu.mobile.finalproject.ma01_20180988;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Recipe implements Serializable {
     private int recipe_id;

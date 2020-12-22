@@ -19,11 +19,13 @@ public class RecipeAdapter extends BaseAdapter {
     private ArrayList<Recipe> list;
     private NetworkManager networkManager;
     private ImageFileManager imageFileManager;
+    private boolean isMyRecipe;
 
     public RecipeAdapter(Context context, int resource, ArrayList<Recipe> list) {
         this.context = context;
         this.layout = resource;
         this.list = list;
+        this.isMyRecipe = isMyRecipe;
         imageFileManager = new ImageFileManager(context);
         networkManager = new NetworkManager(context);
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,7 +65,11 @@ public class RecipeAdapter extends BaseAdapter {
         Recipe dto = list.get(position);
 
         viewHolder.tvRcpName.setText(dto.getName());
-        viewHolder.tvRcpType.setText(dto.getType());
+        if (dto.getType() != null) {
+            viewHolder.tvRcpType.setText(dto.getType());
+            viewHolder.tvRcpType.setVisibility(View.VISIBLE);
+        }
+
 
         if (dto.getImageLink() == null) {
             return view;

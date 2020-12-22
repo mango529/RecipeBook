@@ -29,7 +29,8 @@
             android:name=".MainActivity"
             android:label="@string/app_name" />
         <activity android:name=".RecipeDetailActivity" />
-
+        <activity android:name=".MyRecipeActivity" />
+        <activity android:name=".MyRecipeDetailActivity" />
         <receiver android:name=".TimerReceiver" />
     </application>
 

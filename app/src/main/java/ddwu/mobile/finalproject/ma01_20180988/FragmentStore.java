@@ -273,4 +273,10 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
             }
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
 }

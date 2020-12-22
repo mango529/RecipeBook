@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragmentHome).commit();
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
-       // navView.setSelectedItemId(R.id.navigation_home);
         navView.setOnNavigationItemSelectedListener(new ItemSelectedListener());
 
         String str = getIntent().getStringExtra("notiTimer");

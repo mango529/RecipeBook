@@ -52,7 +52,7 @@ public class FragmentRecipe extends Fragment {
         svRecipe.setQueryHint("요리 이름을 입력하세요.");
         int id = svRecipe.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         Typeface tf = ResourcesCompat.getFont(getContext(), R.font.notosanskr_regular);
-        TextView searchText = (TextView) svRecipe.findViewById(id);
+        TextView searchText = svRecipe.findViewById(id);
         searchText.setTypeface(tf);
         searchText.setIncludeFontPadding(false);
 

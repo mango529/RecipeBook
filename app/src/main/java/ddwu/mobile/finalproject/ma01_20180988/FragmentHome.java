@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ public class FragmentHome extends Fragment {
 
     private TextView tvRecommRCP;
     private ImageView ivRecommRCP;
+    private Button btnMyRecipe;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -39,6 +41,7 @@ public class FragmentHome extends Fragment {
 
         tvRecommRCP = view.findViewById(R.id.tvRecommRCP);
         ivRecommRCP = view.findViewById(R.id.ivRecommRCP);
+        btnMyRecipe = view.findViewById(R.id.btnMyRecipe);
 
         Random rand = new Random();
         int recipeNum = rand.nextInt(1236) + 1;
@@ -67,6 +70,13 @@ public class FragmentHome extends Fragment {
             }
         });
 
+        btnMyRecipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), MyRecipeActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
