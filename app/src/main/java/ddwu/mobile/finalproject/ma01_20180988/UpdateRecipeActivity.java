@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -45,18 +46,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 
-public class NewRecipeActivity extends AppCompatActivity {
-    private static final String TAG = "NewRecipeActivity";
+public class UpdateRecipeActivity extends AppCompatActivity {
+    private static final String TAG = "UpdateRecipeActivity";
     final static int PERMISSION_REQ_CODE = 100;
     private static final int RECIPE_PICK_FROM_ALBUM = 1;
     private static final int MANUAL_PICK_FROM_ALBUM = 2;
 
-    private ImageView ivNewRcpImg;
-    private TextView tvNewStep;
-    private EditText etNewRcpName, etNewRcpDate, etNewRcpMemo, etNewRcpHashtag;
-    private RatingBar rbNewRating;
-    private ListView lvNewIngre;
-    private ViewPager vpNewManual;
+    private ImageView ivUpdateRcpImg;
+    private TextView tvUpdateStep;
+    private EditText etUpdateRcpName, etUpdateRcpDate, etUpdateRcpMemo, etUpdateRcpHashtag;
+    private RatingBar rbUpdateRating;
+    private ListView lvUpdateIngre;
+    private ViewPager vpUpdateManual;
     private ConstraintLayout ingreDialog, manualDialog;
 
     private ArrayList<String> ingredients;
@@ -69,33 +70,38 @@ public class NewRecipeActivity extends AppCompatActivity {
     private TextView dialogTitle;
     private AlertDialog.Builder builder;
     private File tempFile;
-    private ImageView ivNewManualImg;
+    private ImageView ivUpdateManualImg;
     private String selectedRcpImg;
+    private Recipe recipe;
+    private NetworkManager networkManager;
     private int selManual;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_recipe);
+        setContentView(R.layout.activity_update_recipe);
 
+        recipe = (Recipe) getIntent().getSerializableExtra("recipe");
+
+        networkManager = new NetworkManager(this);
         calendar = Calendar.getInstance();
         dateFormat = "yyyy-MM-dd";
         sdf = new SimpleDateFormat(dateFormat, Locale.KOREA);
 
-        tvNewStep = findViewById(R.id.tvNewStep);
-        ivNewRcpImg = findViewById(R.id.ivNewRcpImg);
-        etNewRcpName = findViewById(R.id.etNewRcpName);
-        etNewRcpDate = findViewById(R.id.etNewRcpDate);
-        etNewRcpMemo = findViewById(R.id.etNewRcpMemo);
-        etNewRcpHashtag = findViewById(R.id.etNewRcpHashtag);
-        rbNewRating = findViewById(R.id.rbNewRating);
-        lvNewIngre = findViewById(R.id.lvNewIngre);
-        vpNewManual = findViewById(R.id.vpNewManual);
+        ivUpdateRcpImg = findViewById(R.id.ivUpdateRcpImg);
+        tvUpdateStep = findViewById(R.id.tvUpdateStep);
+        etUpdateRcpName = findViewById(R.id.etUpdateRcpName);
+        etUpdateRcpDate = findViewById(R.id.etUpdateRcpDate);
+        etUpdateRcpMemo = findViewById(R.id.etUpdateRcpMemo);
+        etUpdateRcpHashtag = findViewById(R.id.etUpdateRcpHashtag);
+        rbUpdateRating = findViewById(R.id.rbUpdateRating);
+        lvUpdateIngre = findViewById(R.id.lvUpdateIngre);
+        vpUpdateManual = findViewById(R.id.vpUpdateManual);
 
         ingreDialog = (ConstraintLayout) View.inflate(this, R.layout.dialog_add_ingredient, null);
         manualDialog = (ConstraintLayout) View.inflate(this, R.layout.dialog_add_manual, null);
-        ivNewManualImg = manualDialog.findViewById(R.id.ivNewManualImg);
-        ivNewManualImg.setOnClickListener(new View.OnClickListener() {
+        ivUpdateManualImg = manualDialog.findViewById(R.id.ivNewManualImg);
+        ivUpdateManualImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (checkPermission()) {
@@ -104,13 +110,27 @@ public class NewRecipeActivity extends AppCompatActivity {
             }
         });
 
-        ingredients = new ArrayList<>();
-        manuals = new ArrayList<>();
+        selectedRcpImg = recipe.getImageLink();
+        ingredients = recipe.getIngredients();
+        manuals = recipe.getManuals();
+        if (selectedRcpImg.contains("http"))  {
+            new GetImageAsyncTask().execute(selectedRcpImg);
+        }
+        else {
+            setPic(ivUpdateRcpImg, selectedRcpImg);
+        }
+        tvUpdateStep.setText(String.valueOf(manuals.get(0).getStep()));
+        etUpdateRcpName.setText(recipe.getName());
+        if (recipe.getDate() != null ) etUpdateRcpDate.setText(recipe.getDate());
+        if (recipe.getMemo() != null) etUpdateRcpMemo.setText(recipe.getMemo());
+        if (recipe.getHashtag() != null) etUpdateRcpHashtag.setText(recipe.getHashtag());
+        rbUpdateRating.setRating(recipe.getRating());
+
         ingredientAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, ingredients);
         manualAdapter = new ManualAdapter(this, manuals);
-        lvNewIngre.setAdapter(ingredientAdapter);
-        vpNewManual.setAdapter(manualAdapter);
-        vpNewManual.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        lvUpdateIngre.setAdapter(ingredientAdapter);
+        vpUpdateManual.setAdapter(manualAdapter);
+        vpUpdateManual.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -118,7 +138,7 @@ public class NewRecipeActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 selManual = position;
-                tvNewStep.setText(String.valueOf(manuals.get(position).getStep()));
+                tvUpdateStep.setText(String.valueOf(manuals.get(position).getStep()));
             }
 
             @Override
@@ -126,14 +146,14 @@ public class NewRecipeActivity extends AppCompatActivity {
             }
         });
 
-        etNewRcpDate.setOnClickListener(new View.OnClickListener() {
+        etUpdateRcpDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(NewRecipeActivity.this, datePicker, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(UpdateRecipeActivity.this, datePicker, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
-        ivNewRcpImg.setOnClickListener(new View.OnClickListener() {
+        ivUpdateRcpImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (checkPermission()) {
@@ -142,18 +162,18 @@ public class NewRecipeActivity extends AppCompatActivity {
             }
         });
 
-        lvNewIngre.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvUpdateIngre.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView dialogTitle = new TextView(NewRecipeActivity.this);
+                TextView dialogTitle = new TextView(UpdateRecipeActivity.this);
                 dialogTitle.setIncludeFontPadding(false);
                 dialogTitle.setText("재료 삭제");
-                dialogTitle.setTypeface(ResourcesCompat.getFont(NewRecipeActivity.this, R.font.notosanskr_medium));
+                dialogTitle.setTypeface(ResourcesCompat.getFont(UpdateRecipeActivity.this, R.font.notosanskr_medium));
                 dialogTitle.setGravity(Gravity.CENTER);
                 dialogTitle.setPadding(10, 70, 10, 70);
                 dialogTitle.setTextSize(20F);
                 dialogTitle.setBackgroundResource(R.color.pink_100);
-                AlertDialog.Builder builder = new AlertDialog.Builder(NewRecipeActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(UpdateRecipeActivity.this);
                 builder.setCustomTitle(dialogTitle)
                         .setMessage(ingredients.get(position) + "를 삭제하시겠습니까?")
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -174,6 +194,28 @@ public class NewRecipeActivity extends AppCompatActivity {
         startActivityForResult(intent, requestCode);
     }
 
+    class GetImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
+        String imageAddress;
+
+        public GetImageAsyncTask() {
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            imageAddress = params[0];
+            Bitmap result;
+            result = networkManager.downloadImage(imageAddress);
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null) {
+                ivUpdateRcpImg.setImageBitmap(bitmap);
+            }
+        }
+    }
+
     DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -181,7 +223,7 @@ public class NewRecipeActivity extends AppCompatActivity {
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            etNewRcpDate.setText(sdf.format(calendar.getTime()));
+            etUpdateRcpDate.setText(sdf.format(calendar.getTime()));
         }
     };
 
@@ -204,21 +246,7 @@ public class NewRecipeActivity extends AppCompatActivity {
         builder = new AlertDialog.Builder(this);
 
         switch (v.getId()) {
-            case R.id.btnDeleteNewManual:
-                dialogTitle.setText("방법 삭제");
-                builder.setCustomTitle(dialogTitle)
-                        .setMessage(manuals.get(selManual).getStep() + " 단계를 삭제하시겠습니까?")
-                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                manuals.remove(selManual);
-                                manualAdapter.notifyDataSetChanged();
-                                tvNewStep.setText(String.valueOf(manuals.get(0).getStep()));
-                            }
-                        }).setNegativeButton("취소", null)
-                        .show();
-                break;
-            case R.id.btnNewIngredient:
+            case R.id.btnUpdateIngredient:
                 dialogTitle.setText("재료 추가하기");
                 if (ingreDialog.getParent() != null)
                     ((ViewGroup) ingreDialog.getParent()).removeView(ingreDialog);
@@ -235,7 +263,7 @@ public class NewRecipeActivity extends AppCompatActivity {
                         }).setNegativeButton("취소", null)
                         .show();
                 break;
-            case R.id.btnNewManual:
+            case R.id.btnUpdateManual:
                 dialogTitle.setText("방법 추가하기");
                 if (manualDialog.getParent() != null)
                     ((ViewGroup) manualDialog.getParent()).removeView(manualDialog);
@@ -246,59 +274,74 @@ public class NewRecipeActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                             }
                         }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                if(tempFile != null) {
-                                    deleteFile();
-                                }
-                            }
-                        });
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(tempFile != null) {
+                            deleteFile();
+                        }
+                    }
+                });
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
                 Button button = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                button.setOnClickListener(new CustomListener(alertDialog));
+                button.setOnClickListener(new UpdateRecipeActivity.CustomListener(alertDialog));
                 break;
-                case R.id.btnComNewRcp:
-                    Recipe recipe = new Recipe();
-                    if (etNewRcpName.getText().toString().isEmpty() || selectedRcpImg.isEmpty()) {
-                        Toast.makeText(this, "사진과 요리 이름은 필수 입력 항목입니다!", Toast.LENGTH_SHORT).show();
-                        return;
+            case R.id.btnComUpdateRcp:
+                Recipe updateRecipe = new Recipe();
+                updateRecipe.setRecipe_id(recipe.getRecipe_id());
+                if (etUpdateRcpName.getText() == null || etUpdateRcpName.getText().toString().replace(" ", "").equals("")) {
+                    Toast.makeText(this, "사진과 요리 이름은 필수 입력 항목입니다!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (ingredients.size() == 0) {
+                    Toast.makeText(this, "재료를 하나 이상 입력하세요!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (manuals.size() == 0) {
+                    Toast.makeText(this, "방법을 하나 이상 입력하세요!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                updateRecipe.setImageLink(selectedRcpImg);
+                updateRecipe.setRating(rbUpdateRating.getRating());
+                updateRecipe.setDate(etUpdateRcpDate.getText().toString());
+                updateRecipe.setName(etUpdateRcpName.getText().toString());
+                updateRecipe.getIngredients().addAll(ingredients);
+                updateRecipe.getManuals().addAll(manuals);
+                if (!etUpdateRcpMemo.getText().toString().isEmpty()) {
+                    updateRecipe.setMemo(etUpdateRcpMemo.getText().toString());
+                }
+                if (!etUpdateRcpHashtag.getText().toString().isEmpty()) {
+                    if (etUpdateRcpHashtag.getText().toString().contains("#")) {
+                        updateRecipe.setHashtag(etUpdateRcpHashtag.getText().toString().substring(1));
                     }
-                    if (ingredients.size() == 0) {
-                        Toast.makeText(this, "재료를 하나 이상 입력하세요!", Toast.LENGTH_SHORT).show();
-                        return;
+                    else {
+                        updateRecipe.setHashtag(etUpdateRcpHashtag.getText().toString());
                     }
-                    if (manuals.size() == 0) {
-                        Toast.makeText(this, "방법을 하나 이상 입력하세요!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    recipe.setImageLink(selectedRcpImg);
-                    recipe.setRating(rbNewRating.getRating());
-                    recipe.setDate(etNewRcpDate.getText().toString());
-                    recipe.setName(etNewRcpName.getText().toString());
-                    recipe.getIngredients().addAll(ingredients);
-                    recipe.getManuals().addAll(manuals);
-                    if (!etNewRcpMemo.getText().toString().isEmpty()) {
-                        recipe.setMemo(etNewRcpMemo.getText().toString());
-                    }
-                    if (!etNewRcpHashtag.getText().toString().isEmpty()) {
-                        if (etNewRcpHashtag.getText().toString().contains("#")) {
-                            recipe.setHashtag(etNewRcpHashtag.getText().toString().substring(1));
-                        }
-                        else {
-                            recipe.setHashtag(etNewRcpHashtag.getText().toString());
-                        }
-                    }
+                }
 
-                    RecipeDBManager manager = new RecipeDBManager(this);
-                    manager.addNewRecipe(recipe);
-                    finish();
+                RecipeDBManager manager = new RecipeDBManager(this);
+                manager.updateRecipe(updateRecipe);
+                finish();
                 break;
-            case R.id.btnCancelNewRcp:
+            case R.id.btnCancelUpdateRcp:
                 if(tempFile != null) {
                     deleteFile();
                 }
                 finish();
+                break;
+            case R.id.btnDeleteManual:
+                dialogTitle.setText("방법 삭제");
+                builder.setCustomTitle(dialogTitle)
+                        .setMessage(manuals.get(selManual).getStep() + " 단계를 삭제하시겠습니까?")
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                manuals.remove(selManual);
+                                manualAdapter.notifyDataSetChanged();
+                                tvUpdateStep.setText(String.valueOf(manuals.get(0).getStep()));
+                            }
+                        }).setNegativeButton("취소", null)
+                        .show();
                 break;
         }
     }
@@ -312,15 +355,15 @@ public class NewRecipeActivity extends AppCompatActivity {
         public void onClick(View v) {
             EditText etNewStep = dialog.findViewById(R.id.etNewStep);
             EditText etNewManual = dialog.findViewById(R.id.etNewManual);
-            ivNewManualImg = dialog.findViewById(R.id.ivNewManualImg);
+            ivUpdateManualImg = dialog.findViewById(R.id.ivNewManualImg);
 
             if (etNewStep.getText().toString().isEmpty() || etNewManual.getText().toString().isEmpty()) {
-                Toast.makeText(NewRecipeActivity.this, "단계와 설명을 입력하세요!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UpdateRecipeActivity.this, "단계와 설명을 입력하세요!", Toast.LENGTH_SHORT).show();
                 return;
             }
             else {
                 if (stepIsInManual(Integer.parseInt(etNewStep.getText().toString()))) {
-                    Toast.makeText(NewRecipeActivity.this, "이미 입력된 단계입니다!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateRecipeActivity.this, "이미 입력된 단계입니다!", Toast.LENGTH_SHORT).show();
                     etNewStep.setText("");
                     return;
                 }
@@ -334,11 +377,11 @@ public class NewRecipeActivity extends AppCompatActivity {
                     else {
                         manuals.add(new Manual(Integer.parseInt(etNewStep.getText().toString()), content, null));
                     }
-                    Collections.sort(manuals,new ManualComparator());
-                    tvNewStep.setText(String.valueOf(manuals.get(0).getStep()));
+                    Collections.sort(manuals,new UpdateRecipeActivity.ManualComparator());
+                    tvUpdateStep.setText(String.valueOf(manuals.get(0).getStep()));
                     etNewStep.setText("");
                     etNewManual.setText("");
-                    ivNewManualImg.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
+                    ivUpdateManualImg.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
                     dialog.dismiss();
                     manualAdapter.notifyDataSetChanged();
                 }
@@ -416,7 +459,7 @@ public class NewRecipeActivity extends AppCompatActivity {
             }
 
             selectedRcpImg = tempFile.getAbsolutePath();
-            setPic(ivNewRcpImg, tempFile.getAbsolutePath());
+            setPic(ivUpdateRcpImg, tempFile.getAbsolutePath());
         } else if (requestCode == MANUAL_PICK_FROM_ALBUM) {
             Uri photoUri = data.getData();
             Cursor cursor = null;
@@ -439,7 +482,7 @@ public class NewRecipeActivity extends AppCompatActivity {
                 }
             }
 
-            setPic(ivNewManualImg, tempFile.getAbsolutePath());
+            setPic(ivUpdateManualImg, tempFile.getAbsolutePath());
         }
 
     }
@@ -452,8 +495,10 @@ public class NewRecipeActivity extends AppCompatActivity {
 
     private void deleteFile() {
         if (tempFile.exists()) {
-            tempFile.delete();
-            tempFile = null;
+            if (tempFile.delete()) {
+                Log.e(TAG, tempFile.getAbsolutePath() + " 삭제 성공");
+                tempFile = null;
+            }
         }
     }
 }

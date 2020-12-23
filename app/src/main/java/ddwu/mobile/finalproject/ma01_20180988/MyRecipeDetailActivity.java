@@ -1,12 +1,18 @@
 package ddwu.mobile.finalproject.ma01_20180988;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -15,6 +21,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -69,6 +76,7 @@ public class MyRecipeDetailActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+        tvMyRcpStep.setText(String.valueOf(recipe.getManuals().get(0).getStep()));
 
         tvDetailMyRcpName.setText(recipe.getName());
         if (recipe.getImageLink().contains("http"))  {
@@ -88,6 +96,23 @@ public class MyRecipeDetailActivity extends AppCompatActivity {
         if (recipe.getHashtag() != null) {
             tvMyRcpHashtag.setVisibility(View.VISIBLE);
             tvMyRcpHashtag.setText("#" + recipe.getHashtag());
+        }
+
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnUpdateRcp:
+                Intent intent = new Intent(this, UpdateRecipeActivity.class);
+                intent.putExtra("recipe", recipe);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.btnDeleteRcp:
+                RecipeDBManager manager = new RecipeDBManager(this);
+                manager.deleteRecipe(recipe.getRecipe_id());
+                finish();
+                break;
         }
     }
 

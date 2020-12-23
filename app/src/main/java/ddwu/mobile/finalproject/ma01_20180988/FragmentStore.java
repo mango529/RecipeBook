@@ -107,12 +107,14 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
         }
         markerOptions = new MarkerOptions();
 
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if(location==null) {
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        }
-        if(location!=null) {
-            findStore(location);
+        if (checkPermission()) {
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(location==null) {
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            }
+            if(location!=null) {
+                findStore(location);
+            }
         }
 
         mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {

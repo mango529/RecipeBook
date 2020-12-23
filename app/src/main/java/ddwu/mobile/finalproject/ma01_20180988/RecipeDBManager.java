@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +34,10 @@ public class RecipeDBManager {
         for (Manual m : newRecipe.getManuals()) {
             value.clear();
             value.put(RecipeDBHelper.R_COL_ID, id);
-            Log.d(TAG, "recipe id " + id);
             value.put(RecipeDBHelper.COL_STEP, m.getStep());
-            Log.d(TAG, "COL_STEP " + m.getStep());
             value.put(RecipeDBHelper.COL_CONTENT, m.getContent());
-            Log.d(TAG, "COL_CONTENT " + m.getContent());
             if (m.getImageLink() != null) {
                 value.put(RecipeDBHelper.COL_IMAGELINK, m.getImageLink());
-                Log.d(TAG, "COL_IMAGELINK " + m.getImageLink());
             }
             db.insert(RecipeDBHelper.M_TABLE_NAME, null, value);
         }
@@ -95,5 +92,50 @@ public class RecipeDBManager {
         recipeCursor.close();
         recipeDBHelper.close();
         return result;
+    }
+
+    public void deleteRecipe(int recipe_id) {
+        RecipeDBHelper recipeDBHelper = new RecipeDBHelper(context);
+        SQLiteDatabase db = recipeDBHelper.getWritableDatabase();
+
+        db.delete(RecipeDBHelper.R_TABLE_NAME, "recipe_id=?", new String[]{String.valueOf(recipe_id)});
+        recipeDBHelper.close();
+    }
+
+    public void updateRecipe(Recipe recipe) {
+        RecipeDBHelper recipeDBHelper = new RecipeDBHelper(context);
+        SQLiteDatabase db = recipeDBHelper.getWritableDatabase();
+
+        ContentValues value = new ContentValues();
+        value.put(RecipeDBHelper.COL_NAME, recipe.getName());
+        value.put(RecipeDBHelper.COL_IMAGELINK, recipe.getImageLink());
+        value.put(RecipeDBHelper.COL_MEMO, recipe.getMemo());
+        value.put(RecipeDBHelper.COL_HASHTAG, recipe.getHashtag());
+        value.put(RecipeDBHelper.COL_DATE, recipe.getDate());
+        value.put(RecipeDBHelper.COL_RATING, recipe.getRating());
+
+        db.update(RecipeDBHelper.R_TABLE_NAME, value, "recipe_id=?", new String[]{String.valueOf(recipe.getRecipe_id())});
+
+        db.delete(RecipeDBHelper.M_TABLE_NAME, "recipe_id=?", new String[]{String.valueOf(recipe.getRecipe_id())});
+        for (Manual m : recipe.getManuals()) {
+            value.clear();
+            value.put(RecipeDBHelper.R_COL_ID, recipe.getRecipe_id());
+            value.put(RecipeDBHelper.COL_STEP, m.getStep());
+            value.put(RecipeDBHelper.COL_CONTENT, m.getContent());
+            if (m.getImageLink() != null) {
+                value.put(RecipeDBHelper.COL_IMAGELINK, m.getImageLink());
+            }
+            db.insert(RecipeDBHelper.M_TABLE_NAME, null, value);
+        }
+
+        db.delete(RecipeDBHelper.I_TABLE_NAME, "recipe_id=?", new String[]{String.valueOf(recipe.getRecipe_id())});
+        for (String s : recipe.getIngredients()) {
+            value.clear();
+            value.put(RecipeDBHelper.R_COL_ID, recipe.getRecipe_id());
+            value.put(RecipeDBHelper.COL_NAME, s);
+            db.insert(RecipeDBHelper.I_TABLE_NAME, null, value);
+        }
+
+        recipeDBHelper.close();
     }
 }

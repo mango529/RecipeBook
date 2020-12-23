@@ -33,6 +33,7 @@
         <activity android:name=".MyRecipeActivity" />
         <activity android:name=".MyRecipeDetailActivity" />
         <activity android:name=".NewRecipeActivity" />
+        <activity android:name=".UpdateRecipeActivity" />
         <receiver android:name=".TimerReceiver" />
     </application>
 
