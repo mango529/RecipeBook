@@ -136,7 +136,6 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
                         if (e instanceof ApiException) {
                             ApiException apiException = (ApiException) e;
                             int statusCode = apiException.getStatusCode();
-                            Log.e("goeun", apiException.getMessage() + statusCode);
                         }
                     }
                 });
@@ -158,7 +157,6 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
 
         final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
         if (metadata == null || metadata.isEmpty()) {
-            Log.w("goeun", "No photo metadata.");
             return;
         }
         final PhotoMetadata photoMetadata = metadata.get(0);
@@ -176,7 +174,6 @@ public class FragmentStore extends Fragment implements OnMapReadyCallback {
                 final ApiException apiException = (ApiException) exception;
 
                 final int statusCode = apiException.getStatusCode();
-                Log.e("goeun", "Place not found: " + exception.getMessage() + statusCode);
             }
         });
     }

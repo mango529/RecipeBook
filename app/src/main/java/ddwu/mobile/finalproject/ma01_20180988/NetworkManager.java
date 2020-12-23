@@ -92,7 +92,7 @@ public class NetworkManager {
     }
 
     private boolean isOnline() {
-        Log.d("goeun", context.toString());
+
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
@@ -109,7 +109,6 @@ public class NetworkManager {
             throw new IOException("HTTP error code: " + conn.getResponseCode());
         }
 
-        Log.d("goeun",  "re " +conn.getInputStream());
         return conn.getInputStream();
     }
 }

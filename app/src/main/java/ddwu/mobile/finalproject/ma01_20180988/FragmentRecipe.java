@@ -56,7 +56,6 @@ public class FragmentRecipe extends Fragment {
         svRecipe.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d("goeun", query);
                 try {
                     new NetworkAsyncTask().execute(apiAddress
                             + URLEncoder.encode(query, "UTF-8"));
@@ -105,8 +104,7 @@ public class FragmentRecipe extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             String address = strings[0];
-            Log.d("goeun", address);
-            String result = null;
+            String result;
 
             result = networkManager.downloadContents(address);
             if (result == null) return "Error";
@@ -117,7 +115,6 @@ public class FragmentRecipe extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            Log.d("goeun", result);
             adapter.setList(recipeList);
             if (recipeList.size() ==  0) Toast.makeText(getContext(), "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show();
             progressDlg.dismiss();

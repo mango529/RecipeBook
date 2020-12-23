@@ -74,7 +74,6 @@ public class FragmentTimer extends Fragment {
                 minute = npMinute.getValue();
                 second = npSecond.getValue();
                 int millis = dateToMill(String.format("%02d : %02d : %02d", hour, minute, second));
-                Log.d("goeun", "mill " + millis);
 
                 Intent intent = new Intent(getContext(), TimerReceiver.class);
                 sender = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
@@ -84,7 +83,6 @@ public class FragmentTimer extends Fragment {
                 calendar.add(Calendar.MILLISECOND, millis);
 
                 alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), sender);
-                Log.d("goeun", " get " +calendar.getTimeInMillis() );
 
                 countDownTimer = new CountDownTimer(millis + 1000,1000) {
                     @Override

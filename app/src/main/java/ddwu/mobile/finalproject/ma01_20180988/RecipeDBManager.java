@@ -94,6 +94,46 @@ public class RecipeDBManager {
         return result;
     }
 
+    public ArrayList<Recipe> getMyRecipeByNameNHashtag(String keyword) {
+        RecipeDBHelper recipeDBHelper = new RecipeDBHelper(context);
+        SQLiteDatabase db = recipeDBHelper.getWritableDatabase();
+
+        ArrayList<Recipe> result = new ArrayList<>();
+
+        Cursor recipeCursor = db.rawQuery("SELECT * FROM recipe_table WHERE name like ? OR hashtag like ?;", new String[]{"%" + keyword + "%", "%" + keyword + "%"});
+
+        while (recipeCursor.moveToNext()) {
+            Recipe recipe = new Recipe();
+            recipe.setRecipe_id(recipeCursor.getInt(recipeCursor.getColumnIndex(RecipeDBHelper.R_COL_ID)));
+            recipe.setName(recipeCursor.getString(recipeCursor.getColumnIndex(RecipeDBHelper.COL_NAME)));
+            recipe.setMemo(recipeCursor.getString(recipeCursor.getColumnIndex(RecipeDBHelper.COL_MEMO)));
+            recipe.setHashtag(recipeCursor.getString(recipeCursor.getColumnIndex(RecipeDBHelper.COL_HASHTAG)));
+            recipe.setDate(recipeCursor.getString(recipeCursor.getColumnIndex(RecipeDBHelper.COL_DATE)));
+            recipe.setRating(recipeCursor.getInt(recipeCursor.getColumnIndex(RecipeDBHelper.COL_RATING)));
+            recipe.setImageLink(recipeCursor.getString(recipeCursor.getColumnIndex(RecipeDBHelper.COL_IMAGELINK)));
+
+            Cursor manualCursor = db.rawQuery("SELECT * FROM manual_table WHERE recipe_id=?;", new String[] {String.valueOf(recipe.getRecipe_id())});
+            while (manualCursor.moveToNext()) {
+                Manual manual = new Manual();
+                manual.setStep(manualCursor.getInt(manualCursor.getColumnIndex(RecipeDBHelper.COL_STEP)));
+                manual.setContent(manualCursor.getString(manualCursor.getColumnIndex(RecipeDBHelper.COL_CONTENT)));
+                manual.setImageLink(manualCursor.getString(manualCursor.getColumnIndex(RecipeDBHelper.COL_IMAGELINK)));
+                recipe.getManuals().add(manual);
+            }
+            manualCursor.close();
+
+            Cursor ingredientCursor = db.rawQuery("SELECT * FROM ingredient_table WHERE recipe_id=?;", new String[] {String.valueOf(recipe.getRecipe_id())});
+            while (ingredientCursor.moveToNext()) {
+                recipe.getIngredients().add(ingredientCursor.getString(ingredientCursor.getColumnIndex(RecipeDBHelper.COL_NAME)));
+            }
+            result.add(recipe);
+            ingredientCursor.close();
+        }
+        recipeCursor.close();
+        recipeDBHelper.close();
+        return result;
+    }
+
     public void deleteRecipe(int recipe_id) {
         RecipeDBHelper recipeDBHelper = new RecipeDBHelper(context);
         SQLiteDatabase db = recipeDBHelper.getWritableDatabase();

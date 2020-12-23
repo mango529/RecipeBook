@@ -89,8 +89,7 @@ public class FragmentHome extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             String address = strings[0];
-            Log.d("goeun", address);
-            String result = null;
+            String result;
 
             result = networkManager.downloadContents(address);
             if (result == null) return "Error";
@@ -101,7 +100,6 @@ public class FragmentHome extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            Log.d("goeun", result);
             tvRecommRCP.setText(recipe.getName());
 
             new GetImageAsyncTask().execute(recipe.getImageLink());
