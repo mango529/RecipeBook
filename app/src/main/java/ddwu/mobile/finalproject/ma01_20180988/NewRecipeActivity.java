@@ -205,6 +205,7 @@ public class NewRecipeActivity extends AppCompatActivity {
 
         switch (v.getId()) {
             case R.id.btnDeleteNewManual:
+                if (manuals.size() == 0) return;
                 dialogTitle.setText("방법 삭제");
                 builder.setCustomTitle(dialogTitle)
                         .setMessage(manuals.get(selManual).getStep() + " 단계를 삭제하시겠습니까?")
@@ -260,7 +261,7 @@ public class NewRecipeActivity extends AppCompatActivity {
                 break;
                 case R.id.btnComNewRcp:
                     Recipe recipe = new Recipe();
-                    if (etNewRcpName.getText().toString().isEmpty() || selectedRcpImg.isEmpty()) {
+                    if (etNewRcpName.getText() == null || etNewRcpName.getText().toString().replace(" ", "").equals("") || selectedRcpImg == null) {
                         Toast.makeText(this, "사진과 요리 이름은 필수 입력 항목입니다!", Toast.LENGTH_SHORT).show();
                         return;
                     }
