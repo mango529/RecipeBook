@@ -62,10 +62,10 @@ public class ManualAdapter extends PagerAdapter {
         tvDetailManual = v.findViewById(R.id.tvDetailManual);
 
         tvDetailManual.setText(manuals.get(position).getContent());
+
         if (manuals.get(position).getImageLink() != null) {
             ivDetailManualImg.setVisibility(View.VISIBLE);
             if (manuals.get(position).getImageLink().contains("http"))  {
-                ivDetailManualImg.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
                 new GetImageAsyncTask().execute(manuals.get(position).getImageLink());
             }
             else {
@@ -77,10 +77,6 @@ public class ManualAdapter extends PagerAdapter {
         return v;
     }
 
-    @Override
-    public int getItemPosition(@NonNull Object object) {
-        return POSITION_NONE;
-    }
 
     private void setPic(ImageView view, String path) {
         BitmapFactory.Options options = new BitmapFactory.Options();

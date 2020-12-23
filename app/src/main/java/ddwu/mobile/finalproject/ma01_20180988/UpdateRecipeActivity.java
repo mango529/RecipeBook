@@ -123,7 +123,7 @@ public class UpdateRecipeActivity extends AppCompatActivity {
         etUpdateRcpName.setText(recipe.getName());
         if (recipe.getDate() != null ) etUpdateRcpDate.setText(recipe.getDate());
         if (recipe.getMemo() != null) etUpdateRcpMemo.setText(recipe.getMemo());
-        if (recipe.getHashtag() != null) etUpdateRcpHashtag.setText(recipe.getHashtag());
+        if (recipe.getHashtag() != null) etUpdateRcpHashtag.setText("#" + recipe.getHashtag());
         rbUpdateRating.setRating(recipe.getRating());
 
         ingredientAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, ingredients);

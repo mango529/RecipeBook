@@ -67,24 +67,25 @@ public class FragmentTimer extends Fragment {
         btnTimerStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clTimerSet.setVisibility(View.INVISIBLE);
+                clTimerSet.setVisibility(View.GONE);
                 clTimerStart.setVisibility(View.VISIBLE);
 
                 hour = npHour.getValue();
                 minute = npMinute.getValue();
                 second = npSecond.getValue();
-                int millis = dateToMill(String.format("%02d : %02d : %02d", hour, minute, second));
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                long currentTime = calendar.getTimeInMillis();
+                calendar.add(Calendar.HOUR, +hour);
+                calendar.add(Calendar.MINUTE, +minute);
+                calendar.add(Calendar.SECOND, +second);
+                long setTime = calendar.getTimeInMillis();
 
                 Intent intent = new Intent(getContext(), TimerReceiver.class);
                 sender = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
+                alarmManager.set(AlarmManager.RTC, setTime - currentTime, sender);
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(System.currentTimeMillis());
-                calendar.add(Calendar.MILLISECOND, millis);
-
-                alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), sender);
-
-                countDownTimer = new CountDownTimer(millis + 1000,1000) {
+                countDownTimer = new CountDownTimer(setTime - currentTime + 1000,1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         tvTimer.setText(String.format("%02d : %02d : %02d", hour, minute, second));
@@ -103,7 +104,7 @@ public class FragmentTimer extends Fragment {
                     @Override
                     public void onFinish() {
                         clTimerSet.setVisibility(View.VISIBLE);
-                        clTimerStart.setVisibility(View.INVISIBLE);
+                        clTimerStart.setVisibility(View.GONE);
                     }
                 };
                 countDownTimer.start();
@@ -116,22 +117,11 @@ public class FragmentTimer extends Fragment {
                 if (sender != null) alarmManager.cancel(sender);
                 countDownTimer.cancel();
                 clTimerSet.setVisibility(View.VISIBLE);
-                clTimerStart.setVisibility(View.INVISIBLE);
+                clTimerStart.setVisibility(View.GONE);
             }
         });
 
         return view;
-    }
-
-    public int dateToMill(String date) {
-        String pattern = "HH : mm : ss";
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        Date trans_date = null;
-        try {
-            trans_date = formatter.parse(date);
-        } catch (ParseException e) {
-             e.printStackTrace();
-        } return (int)trans_date.getTime();
     }
 
     private void createNotificationChannel() {
