@@ -338,7 +338,8 @@ public class UpdateRecipeActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 manuals.remove(selManual);
                                 manualAdapter.notifyDataSetChanged();
-                                tvUpdateStep.setText(String.valueOf(manuals.get(0).getStep()));
+                                if (selManual == 0) tvUpdateStep.setText(String.valueOf(manuals.get(0).getStep()));
+                                else tvUpdateStep.setText(String.valueOf(manuals.get(selManual).getStep()));
                             }
                         }).setNegativeButton("취소", null)
                         .show();

@@ -77,6 +77,10 @@ public class ManualAdapter extends PagerAdapter {
         return v;
     }
 
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
+    }
 
     private void setPic(ImageView view, String path) {
         BitmapFactory.Options options = new BitmapFactory.Options();
